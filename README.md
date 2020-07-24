@@ -1,2 +1,6 @@
 # carnap-javascript
-Javascript snippets and widgets for use with Carnap.io
+
+This is a place for me to put javascript snippets and widgets that are meant to work
+with <https://carnap.io>.
+
+
