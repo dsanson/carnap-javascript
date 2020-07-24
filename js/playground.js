@@ -1,3 +1,5 @@
 // proof of concept
 
-$(".checklist").prop("disabled", false);
+$( document ).read(function() {
+    $(".checklist").prop("disabled", false);
+}
