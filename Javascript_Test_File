@@ -3,3 +3,18 @@ js: https://dsanson.github.io/carnap-javascript/js/playground.js
 ---
 
 This is a playground for testing out javascript with Carnap.io.
+
+Here is a checklist:
+
+<ul class="task-list checklist">
+<li><input type="checkbox" disabled="" />
+Item 1</li>
+<li><input type="checkbox" disabled="" />
+Item 2</li>
+<li><input type="checkbox" disabled="" />
+Item 3</li>
+<li><input type="checkbox" disabled="" />
+Item 4</li>
+<li><input type="checkbox" disabled="" />
+Item 5</li>
+</ul>
