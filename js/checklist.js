@@ -33,11 +33,11 @@ function checklist() {
             v = $( this ).val()
             if ($( this ).is(":checked")) {
                 as["Checklist Items"][v] = true;
-                $(".task-list :checkbox value=v).prop("checked", true);
+                $(".task-list :checkbox value=v").prop("checked", true);
             }
             else {
                 as["Checklist Items"][v] = false;
-                $(".task-list :checkbox value=v).prop("checked", true);
+                $(".task-list :checkbox value=v").prop("checked", true);
             }
             console.log(as);
             
