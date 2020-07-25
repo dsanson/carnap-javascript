@@ -31,23 +31,35 @@ function checklist() {
         $( this ).click(function () {
             // when an input box is clicked, update AssignmentState
             v = $( this ).val()
-            if ($( this ).is(":checked")) {
-                as["Checklist Items"][v] = true;
-                $(':checkbox[value="'+v+'"]').prop("checked", true);
+            if (v == "on") {
+                // The input element does not have a value attribute set
+                // so we look to see if any of its siblings do.
+                v = $( this ).siblings('span,a[value]').attr("value")
+                if (typeof v === 'undefined') {
+                    // if no siblings have value attributes set, we
+                    // fall back to the href of a link element
+                    v = $( this ).siblings('a').attr("href")
+                }
             }
-            else {
-                as["Checklist Items"][v] = false;
-                $(':checkbox[value="'+v+'"]').prop("checked", false);
-            }
-            console.log(as);
-            
-            // If we can't putArgumentState, that probably means we aren't
-            // a Carnap.io assignment.
-            try {
-                putAssignmentState(JSON.stringify(as));
-            }
-            catch {
-                console.log("Unable to putArgumentState")
+            if (typeof v !== 'undefined') { 
+                if ($( this ).is(":checked")) {
+                    as["Checklist Items"][v] = true;
+                    $(':checkbox[value="'+v+'"]').prop("checked", true);
+                }
+                else {
+                    as["Checklist Items"][v] = false;
+                    $(':checkbox[value="'+v+'"]').prop("checked", false);
+                }
+                console.log(as);
+                
+                // If we can't putArgumentState, that probably means we aren't
+                // a Carnap.io assignment.
+                try {
+                    putAssignmentState(JSON.stringify(as));
+                }
+                catch {
+                    console.log("Unable to putArgumentState")
+                }
             }
         });
     }); 
