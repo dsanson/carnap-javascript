@@ -7,9 +7,13 @@ with <https://carnap.io>.
 
 This can be used to add persistent checklists to Carnap assignment pages. To
 try it out, upload the [Checklist Example](Checklist%20Example) to Carnap.io,
-and make it into an assignment. You can also find the Checklist Example on
-Carnap as a Shared Document. But note that the script only works on *assigned*
-documents, just like exercise submission only works on assigned documents.
+and make it into an assignment. It is also available as a shared document on
+Carnap.io:
+
+<https://carnap.io/shared/dsanson@gmail.com/Checklist%20Example>
+
+But note that the script only works when the document is made into an
+*assignment*.
 
 The Checklist Example includes a link the `checklist.js` in its yaml header,
 and then includes the following raw html list:
