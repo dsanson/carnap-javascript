@@ -6,7 +6,20 @@ This is a sample file, demonstrating the use of `checklist.js`, a bit of javascr
 
 <https://github.com/dsanson/carnap-javascript>.
 
-Note that the checklists will only be persistent when this document is made into an actual assignment on Carnap, as the relevant javascript functions are only available for assignments.
+To use `checklist.js` on your own documents, include a link to the script in
+the YAML header:
+
+```
+---
+js: https://dsanson.github.io/carnap-javascript/js/checklist.js
+---
+```
+
+Note that the checklists will only be persistent when this document is made
+into an actual assignment on Carnap, as the relevant javascript functions are
+only available for assignments. So if you want to play around with this file
+in Carnap, you need to download it, then upload it, then assign it to a
+course.
 
 # A Canonical Example, Using Raw HTML
 
@@ -60,14 +73,16 @@ Gets rendered as:
 -   [ ] item 2
 -   [ ] item 3
 
-But pandoc does not set `value` attributes for the checkboxes. So these items
-won't be saved to the Carnap server.
+Pandoc does not set `value` attributes for the checkboxes. So these items
+won't be saved to the Carnap server. Pandoc also disables the checkboxes. This
+script un-disables them, so they can be used dynamically.
 
 ## Setting the value using spans or links
 
-To get around this, the script will look for `span` elements and links that
-have a `value` attribute set, and will use that `value` to identify an item in
-the absence of an explicitly set `value` on the `input` element:
+To get around this, the script will look for `span` elements and anchor
+elements (links) that
+have a `value` attribute set, and use that `value` to set the `value`
+attribute for the checkbox:
 
 ```markdown
 -   [ ] <span value='item 1'>Item 1</span>
@@ -79,7 +94,7 @@ the absence of an explicitly set `value` on the `input` element:
 -   [ ] item 2<span data-value='item 2'></span>
 -   [ ] <a href="#" value='item 1'>Item 1 again</a>
 
-You can also use pandoc's `link_attributes` and `span_attributes` syntax for
+Here I used raw html to specify the value attributes. You can also use pandoc's `link_attributes` and `span_attributes` syntax for
 this purpose. (But these are not currently enabled on Carnap.io, so this won't
 work.)
 
