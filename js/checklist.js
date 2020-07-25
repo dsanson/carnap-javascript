@@ -31,14 +31,17 @@ function checklist() {
         $( this ).click(function () {
             // when an input box is clicked, update AssignmentState
             v = $( this ).val()
+            console.log(v)
             if (v == "on") {
                 // The input element does not have a value attribute set
                 // so we look to see if any of its siblings do.
                 v = $( this ).siblings('span,a[value]').attr("value")
+                console.log(v)
                 if (typeof v === 'undefined') {
                     // if no siblings have value attributes set, we
                     // fall back to the href of a link element
                     v = $( this ).siblings('a').attr("href")
+                    console.log(v)
                 }
             }
             if (typeof v !== 'undefined') { 
