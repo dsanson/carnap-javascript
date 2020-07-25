@@ -9,15 +9,18 @@ function checklist() {
 
     $(".task-list :checkbox").each(function() {
         $( this ).prop("disabled", false);
-        if (as[$( this ).val()]) {
+        if (as["Checklist Items"][$( this ).val()]) {
             $( this ).prop("checked", true);
+        }
+        else {
+            $( this ).prop("checked", false);
         }
         $( this ).click(function () {
             if ($( this ).is(":checked")) {
-                as[$( this ).val()] = true;
+                as["Checklist Items"][$( this ).val()] = true;
             }
             else {
-                as[$( this ).val()] = false;
+                as["Checklist Items"][$( this ).val()] = false;
             }
             console.log(as);
             putAssignmentState(JSON.stringify(as));
