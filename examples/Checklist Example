@@ -1,5 +1,5 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=5
+js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=6
 ---
 
 This is a sample file, demonstrating the use of `checklist.js`, a bit of javascript that enables persistent checklists for assigned documents on Carnap. 
@@ -19,3 +19,19 @@ Complete the syllabus quiz</li>
 Create an account on Carnap.io</li>
 </ul>
 
+Here is the same checklist. These two checklists should stay synchronized (but I'm not sure this works quite right yet):
+
+<ul class="task-list">
+<li><input type="checkbox" value="syllabus" disabled="" />
+Read the syllabus</li>
+<li><input type="checkbox" value="quiz 1" disabled="" />
+Complete the syllabus quiz</li>
+<li><input type="checkbox" value="sign up" disabled="" />
+Create an account on Carnap.io</li>
+</ul>
+
+Here is a checklist without `values`. This should cause the script to break:
+
+-   [ ] item 1
+-   [ ] item 2
+-   [ ] item 3
