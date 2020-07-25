@@ -7,6 +7,10 @@ function checklist() {
         var as = {}
     }
 
+    if (typeof as["Checklist Items"] === "undefined") {
+        as["Checklist Items"] = []
+    }
+
     $(".task-list :checkbox").each(function() {
         $( this ).prop("disabled", false);
         if (as["Checklist Items"][$( this ).val()]) {
