@@ -1,5 +1,5 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=16
+js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=17
 ---
 
 This is a sample file, demonstrating the use of `checklist.js`, a bit of javascript that enables persistent checklists for assigned documents on Carnap: 
@@ -80,7 +80,8 @@ the absence of an explicitly set `value` on the `input` element:
 -   [ ] <a href="#" value='item 1'>Item 1 again</a>
 
 You can also use pandoc's `link_attributes` and `span_attributes` syntax for
-this purpose:
+this purpose. (But these are not currently enabled on Carnap.io, so this won't
+work.)
 
 ```markdown
 -   [ ] [Item 2 Again]{value="item 2"}
