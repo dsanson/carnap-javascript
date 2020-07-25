@@ -44,6 +44,11 @@ This is how I generated the example, starting from:
 -   [ ] Create an account on Carnap.io
 ```
 
+Pandoc is responsible for setting all the checkboxes to `disabled` in my
+example. Since I'd ultimately like to make direct use of pandoc's `task_lists`
+support, the script enables all the disabled checkboxes inside a `ul` with the
+class `task-list`.
+
 We need to use raw html for your checklists, not markdown, for two reasons:
 
 -   Carnap.io does not currently have pandoc's `task_lists` extension enabled,
