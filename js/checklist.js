@@ -20,6 +20,24 @@ function checklist() {
         // pandoc disables all checkboxes by default, so we undisable them
         $( this ).prop("disabled", false);
 
+        // set checkbox value attribute
+        if ($( this ).val() == "on" ) {
+            // find first sibling with a value or data-value attribute
+            e = $( this ).siblings('span[data-value],a[value],span[value],a[data-value]')
+            v = e.attr('data-value')
+            if (typeof v === 'undefined') {
+                v = e.attr('value')
+            }
+            if (typeof v === 'undefined') {
+                // fall back to the href of a link element
+                v = $( this ).siblings('a').attr("href")
+            }
+            if (typeof v === 'undefined') {
+                v = 'skip'
+            }
+            $( this ).val(v)
+        }
+
         // apply stored settings from AssignmentState
         if (as["Checklist Items"][$( this ).val()]) {
             $( this ).prop("checked", true);
@@ -31,20 +49,7 @@ function checklist() {
         $( this ).click(function () {
             // when an input box is clicked, update AssignmentState
             v = $( this ).val()
-            console.log(v)
-            if (v == "on") {
-                // The input element does not have a value attribute set
-                // so we look to see if any of its siblings do.
-                v = $( this ).siblings('span,a[value]').attr("value")
-                console.log(v)
-                if (typeof v === 'undefined') {
-                    // if no siblings have value attributes set, we
-                    // fall back to the href of a link element
-                    v = $( this ).siblings('a').attr("href")
-                    console.log(v)
-                }
-            }
-            if (typeof v !== 'undefined') { 
+            if (v !== 'skip') {
                 if ($( this ).is(":checked")) {
                     as["Checklist Items"][v] = true;
                     $(':checkbox[value="'+v+'"]').prop("checked", true);

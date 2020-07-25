@@ -134,8 +134,23 @@ If the script cannot find any explicit `value` attributes, it will fall back
 to using the value of the first `a` element with an `href` as the checkbox
 identifier.
 
-Note that this is dangerous, if you might need to edit your document after
-you've assigned it. If you change the section headings, and then regenerate
-the checklist, some or all of the checkbox identifiers will change, and 
+Note that this is dangerous. If edit your document after
+you've assigned it, changing the section headings, and then regenerate
+the checklist, some or all of the checkbox identifiers will change. A less
+dangerous option is to provide explicit identifiers using the `value`
+attribute:
 
+-   [ ] [A Canonical Example, Using Raw
+    HTML](#a-canonical-example-using-raw-html){value="canonical"}
+-   [ ] [Pandoc's `task_lists`
+    Extension](#pandocs-task_lists-extension){value="task_lists"}
+    -   [ ] [Setting the value using spans or
+        links](#setting-the-value-using-spans-or-links){value="spans"}
+    -   [ ] [Falling Back to `href`](#falling-back-to-href){value="href"}
 
+Alternatively, you can explicitly set heading identifiers, rather than relying
+on pandoc to generate the reference links:
+
+```markdown
+# A Canonical Example, Using Raw HTML{#canonical}
+```
