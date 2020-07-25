@@ -62,16 +62,16 @@ Pandoc supports github style task lists, using the `task_lists` extension. For
 example,
 
 ```markdown
--   [ ] item 1
--   [ ] item 2
--   [ ] item 3
+- [ ] item 0
+- [ ] item 2
+- [ ] item 3
 ```
 
 Gets rendered as:
 
--   [ ] item 1
--   [ ] item 2
--   [ ] item 3
+- [ ] item 1
+- [ ] item 2
+- [ ] item 3
 
 Pandoc does not set `value` attributes for the checkboxes. So these items
 won't be saved to the Carnap server. Pandoc also disables the checkboxes. This
@@ -85,33 +85,33 @@ have a `value` attribute set, and use that `value` to set the `value`
 attribute for the checkbox:
 
 ```markdown
--   [ ] <span value='item 1'>Item 1</span>
--   [ ] item 2<span value='item 2'></span>
--   [ ] <a href="#" value='item 1'>Item 1 again</a>
+- [ ] <span value='item 1'>Item 1</span>
+- [ ] item 2<span value='item 2'></span>
+- [ ] <a href="#" value='item 1'>Item 1 again</a>
 ```
 
--   [ ] <span data-value='item 1'>Item 1</span>
--   [ ] item 2<span data-value='item 2'></span>
--   [ ] <a href="#" value='item 1'>Item 1 again</a>
+- [ ] <span data-value='item 1'>Item 1</span>
+- [ ] item 2<span data-value='item 2'></span>
+- [ ] <a href="#" value='item 1'>Item 1 again</a>
 
 Here I used raw html to specify the value attributes. You can also use pandoc's `link_attributes` and `span_attributes` syntax for
 this purpose. (But these are not currently enabled on Carnap.io, so this won't
 work.)
 
 ```markdown
--   [ ] [Item 2 Again]{value="item 2"}
+- [ ] [Item 2 Again]{value="item 2"}
 ```
 
--   [ ] [Item 2 Again]{value="item 2"}
+- [ ] [Item 2 Again]{value="item 2"}
 
 If there are multiple spans are links with the attribute `value` set, the
 script will use the first one it finds:
 
 ```markdown
--   [ ] [Item 1 Again]{value="item 1"} or [Item 2 Again]{value="item 2"}?
+- [ ] [Item 1 Again]{value="item 1"} or [Item 2 Again]{value="item 2"}?
 ```
 
--   [ ] [Item 1 Again]{value="item 1"} or [Item 2 Again]{value="item 2"}?
+- [ ] [Item 1 Again]{value="item 1"} or [Item 2 Again]{value="item 2"}?
 
 ## Falling Back to `href`
 
@@ -133,18 +133,18 @@ pandoc for this document (`pandoc --toc -t markdown -s`):
 It is easy to turn this into a checklist by adding github style check boxes:
 
 ```markdown
--   [ ] [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
--   [ ] [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
-    -   [ ] [Setting the value using spans or
+- [ ] [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
+- [ ] [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
+    - [ ] [Setting the value using spans or
         links](#setting-the-value-using-spans-or-links)
-    -   [ ] [Falling Back to `href`](#falling-back-to-href)
+    - [ ] [Falling Back to `href`](#falling-back-to-href)
 ```
 
--   [ ] [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
--   [ ] [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
-    -   [ ] [Setting the value using spans or
+- [ ] [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
+- [ ] [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
+    - [ ] [Setting the value using spans or
         links](#setting-the-value-using-spans-or-links)
-    -   [ ] [Falling Back to `href`](#falling-back-to-href)
+    - [ ] [Falling Back to `href`](#falling-back-to-href)
 
 If the script cannot find any explicit `value` attributes, it will fall back
 to using the value of the first `a` element with an `href` as the checkbox
@@ -156,13 +156,13 @@ the checklist, some or all of the checkbox identifiers will change. A less
 dangerous option is to provide explicit identifiers using the `value`
 attribute:
 
--   [ ] [A Canonical Example, Using Raw
+- [ ] [A Canonical Example, Using Raw
     HTML](#a-canonical-example-using-raw-html){value="canonical"}
--   [ ] [Pandoc's `task_lists`
+- [ ] [Pandoc's `task_lists`
     Extension](#pandocs-task_lists-extension){value="task_lists"}
-    -   [ ] [Setting the value using spans or
+    - [ ] [Setting the value using spans or
         links](#setting-the-value-using-spans-or-links){value="spans"}
-    -   [ ] [Falling Back to `href`](#falling-back-to-href){value="href"}
+    - [ ] [Falling Back to `href`](#falling-back-to-href){value="href"}
 
 Alternatively, you can explicitly set heading identifiers, rather than relying
 on pandoc to generate the reference links:
