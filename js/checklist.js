@@ -15,8 +15,8 @@ function checklist() {
     if (typeof as["Checklist Items"] === "undefined") {
         as["Checklist Items"] = {} 
     }
-
-    $(".task-list :checkbox").each(function() {
+    
+    $(":checkbox").each(function() {
         // pandoc disables all checkboxes by default, so we undisable them
         $( this ).prop("disabled", false);
 
