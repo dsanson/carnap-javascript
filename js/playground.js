@@ -3,8 +3,9 @@ function checklist() {
         var as = JSON.parse(AssignmentState);
     }
     catch {
+        console.log("Unable to parse AssignmentState");
+        console.log(AssignmentState);
         var as = {}
-        as["syllabus"] = true
     }
 
     $(".task-list :checkbox").each(function() {
