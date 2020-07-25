@@ -20,7 +20,7 @@ function checklist() {
                 as[$( this ).val()] = false;
             }
             console.log(as);
-            putAssignmentState(JSON.stringify(a));
+            putAssignmentState(JSON.stringify(as));
         });
     }); 
 }
