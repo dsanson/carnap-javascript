@@ -1,8 +1,6 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/playground.js?v=6
+js: https://dsanson.github.io/carnap-javascript/js/checklist.js
 ---
-
-This is a playground for testing out javascript with Carnap.io.
 
 Here is a checklist:
 
@@ -14,3 +12,4 @@ Complete the syllabus quiz</li>
 <li><input type="checkbox" value="sign up" disabled="" />
 Create an account on Carnap.io</li>
 </ul>
+
