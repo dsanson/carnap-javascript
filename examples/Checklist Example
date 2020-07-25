@@ -1,5 +1,5 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=4
+js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=5
 ---
 
 This is a sample file, demonstrating the use of `checklist.js`, a bit of javascript that enables persistent checklists for assigned documents on Carnap. 

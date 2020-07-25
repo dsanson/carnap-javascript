@@ -8,7 +8,7 @@ function checklist() {
     }
 
     if (typeof as["Checklist Items"] === "undefined") {
-        as["Checklist Items"] = []
+        as["Checklist Items"] = {} 
     }
 
     $(".task-list :checkbox").each(function() {
