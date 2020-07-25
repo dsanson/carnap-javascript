@@ -6,15 +6,11 @@ This is a playground for testing out javascript with Carnap.io.
 
 Here is a checklist:
 
-<ul class="task-list checklist">
-<li><input type="checkbox" disabled="" />
-Item 1</li>
-<li><input type="checkbox" disabled="" />
-Item 2</li>
-<li><input type="checkbox" disabled="" />
-Item 3</li>
-<li><input type="checkbox" disabled="" />
-Item 4</li>
-<li><input type="checkbox" disabled="" />
-Item 5</li>
+<ul class="task-list">
+<li><input type="checkbox" value="syllabus" disabled="" />
+Read the syllabus</li>
+<li><input type="checkbox" value="quiz 1" disabled="" />
+Complete the syllabus quiz</li>
+<li><input type="checkbox" value="sign up" disabled="" />
+Create an account on Carnap.io</li>
 </ul>
