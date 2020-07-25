@@ -4,7 +4,6 @@ function checklist() {
     }
     catch {
         console.log("Unable to parse AssignmentState");
-        console.log(AssignmentState);
         var as = {}
     }
 
