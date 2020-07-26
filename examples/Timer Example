@@ -20,11 +20,13 @@ And include an empty span or div in your document with the identifier `#testTime
 Time remaining: <span id="testTimer"></span>
 ```
 
-Note that the timer will function oonly when your document is an actual assignment on Carnap, with a time limit. So if you want to see this example in action, you need to upload it, then assign it, with a time limit, to a course. At which point, this countdown timer should be live:
+Note that the timer will function only when your document is an actual assignment on Carnap, with a time limit. So if you want to see this example in action, you need to upload it, then assign it, with a time limit, to a course. At which point, this countdown timer should be live:
 
 Time remaining: <span id="testTimer"></span>
 
-The script tries to be smart about how much detail to display. Days left are displayed when there is more than a day remaining. Hours left, if there is more than an hour remaining. Minutes remaining are displayed when less than 3 hours are remaining. Seconds are displayed when there are less than 2 minutes remaining. All of this is easy to change by editing the script:
+The script tries to be smart about how much detail to display. Days left are displayed when there is more than a day remaining. Hours left, if there is more than an hour remaining. Minutes remaining are displayed when less than 3 hours are remaining. Seconds are displayed when there are less than 2 minutes remaining.
+
+These feel like features that should be configurable. For the moment, it is easy enough to make changes by editing the script:
 
 ```javascript
 if (remaining > day) {
@@ -40,4 +42,10 @@ if (3 * hour > remaining > minute) {
 if (remaining < 2 * minute) {
     display = display + r.getUTCSeconds() + 's ';
 }
+if (remaining < 0) {
+    display = "0s";
+    clearInterval(myVar);
+}
 ```
+
+
