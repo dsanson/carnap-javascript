@@ -1,11 +1,16 @@
 #testTimer {
   display: block;
   position: fixed;
-  bottom: 0;
+  top: 0;
   right: 0;
   width: 10em;
   color: red;
   text-align: right;
   padding: 2px;
   z-index: -1;
+}
+
+#testTimer:before {
+  content: 'Time remaining: ';
+  color: black;
 }
