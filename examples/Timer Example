@@ -1,0 +1,43 @@
+---
+js: https://dsanson.github.io/carnap-javascript/js/timer.js
+---
+
+This is a sample file, demonstrating the use of `timer.js`, a bit of javascript that provides a countdown timer for timed assignments on Carnap.io:
+
+<https://github.com/dsanson/carnap-javascript>.
+
+To use `timer.js` in your own assignments, include a link to the script in the YAML header:
+
+```
+---
+js: https://dsanson.github.io/carnap-javascript/js/checklist.js
+---
+```
+
+And include an empty span or div in your document with the identifier `#testTimer`:
+
+```markdown
+Time remaining: <span id="testTimer"></span>
+```
+
+Note that the timer will function oonly when your document is an actual assignment on Carnap, with a time limit. So if you want to see this example in action, you need to upload it, then assign it, with a time limit, to a course. At which point, this countdown timer should be live:
+
+Time remaining: <span id="testTimer"></span>
+
+The script tries to be smart about how much detail to display. Days left are displayed when there is more than a day remaining. Hours left, if there is more than an hour remaining. Minutes remaining are displayed when less than 3 hours are remaining. Seconds are displayed when there are less than 2 minutes remaining. All of this is easy to change by editing the script:
+
+```javascript
+if (remaining > day) {
+    d = Math.floor(remaining/day)
+    display = display + d + 'd ';
+}
+if (remaining > hour) {
+    display = display + r.getUTCHours() + 'h ';
+}
+if (3 * hour > remaining > minute) {
+    display = display + r.getUTCMinutes() + 'm ';
+}
+if (remaining < 2 * minute) {
+    display = display + r.getUTCSeconds() + 's ';
+}
+```

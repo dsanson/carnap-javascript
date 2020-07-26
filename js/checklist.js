@@ -75,7 +75,7 @@ function checklist() {
 
 $( document ).ready(function() {
     checklist();     
-})
+)
 
 
 
