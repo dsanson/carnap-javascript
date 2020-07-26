@@ -2,10 +2,10 @@
 // a simple script to display time remaining for timed assignments
 
 function initTimer() {
-    availability_minutes = 1;
-    a = availability_minutes * 5 * 1000;
-    t = new Date();
-    token_time = t.getTime();
+    // availability_minutes = 1;
+    // a = availability_minutes * 5 * 1000;
+    // t = new Date();
+    // token_time = t.getTime();
     if (typeof availability_minutes !== "undefined") {
         second = 1000;
         minute = 60 * second;
