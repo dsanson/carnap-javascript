@@ -14,3 +14,13 @@ Carnap.io:
 
 But note that the script only works when the document is made into an
 *assignment*, so to test it out, you will need to download the shared file from Carnap, and then upload it, and then assign it.
+
+# timer.js
+
+This is a very minimal implementation of a countdown timer for time-limited
+assignments on Carnap. For information on how to use it and how it works, see:
+
+<https://carnap.io/shared/dsanson@gmail.com/Timer%20Example>
+
+
+
