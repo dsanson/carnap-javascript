@@ -33,26 +33,6 @@ Then assign that uploaded document, and set a time limit on the assignment. The 
 
 The script tries to be smart about how much detail to display. Days left are displayed when there is more than a day remaining. Hours left, if there is more than an hour remaining. Minutes remaining are displayed when less than 3 hours are remaining. Seconds are displayed when there are less than 2 minutes remaining.
 
-These feel like features that should be configurable. For the moment, it is easy enough to make changes by editing the script:
-
-```javascript
-if (remaining > day) {
-    d = Math.floor(remaining/day)
-    display = display + d + 'd ';
-}
-if (remaining > hour) {
-    display = display + r.getUTCHours() + 'h ';
-}
-if (3 * hour > remaining > minute) {
-    display = display + r.getUTCMinutes() + 'm ';
-}
-if (remaining < 2 * minute) {
-    display = display + r.getUTCSeconds() + 's ';
-}
-if (remaining < 0) {
-    display = "0s";
-    clearInterval(myVar);
-}
-```
+These feel like features that should be configurable. But for the moment they are hardwired (though it would be easy to tweak them by editing the script).
 
 
