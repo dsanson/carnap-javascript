@@ -6,38 +6,42 @@ function initTimer() {
         // demo mode
         console.log("demo mode");
         availability_minutes = 5;
-        t = new Date();
-        token_time = t.getTime();
+        token_time = new Date().getTime();
     }
-    a = availability_minutes * 60 * 1000;
+    
+    // Helpful units
     second = 1000;
     minute = 60 * second;
     hour = 60 * minute;
     day = hour * 24;
-    testTimer();
-    var myVar = setInterval(testTimer, second);
+    
+    available = availability_minutes * minute; 
+
+    var x = setInterval(testTimer, second);
     function testTimer() {
-        n = new Date();
-        current_time = n.getTime();
-        remaining = a - (n - token_time);
-        r = new Date(remaining);
+        now = new Date().getTime();
+        elapsed = now - token_time;
+        remaining = available - elapsed;
         display = "";
         if (remaining > day) {
-            d = Math.floor(remaining/day);
-            display = display + d + 'd ';
+            days = Math.floor(remaining / day);
+            display = display + days + 'd ';
         }
         if (remaining > hour) {
-            display = display + r.getUTCHours() + 'h ';
+            hours = Math.floor((remaining % day) / hour);
+            display = display + hours  + 'h ';
         }
         if (3 * hour > remaining && remaining > minute) {
-            display = display + r.getUTCMinutes() + 'm ';
+            minutes = Math.floor((remaining % hour) / minute);
+            display = display + minutes + 'm ';
         }
         if (remaining < 2 * minute) {
-            display = display + r.getUTCSeconds() + 's ';
+            seconds = Math.floor((remaining % minute) / second);
+            display = display + seconds + 's ';
         }
         if (remaining < 0) {
-            display = "0s";
-            clearInterval(myVar);
+            display = "EXPIRED";
+            clearInterval(x);
         }
         $("#testTimer").html(display);
     }
