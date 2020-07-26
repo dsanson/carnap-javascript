@@ -1,5 +1,5 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=1
+js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=2
 ---
 
 This is a sample file, demonstrating the use of `timer.js`, a bit of javascript that provides a countdown timer for timed assignments on Carnap.io. For the source, see:
