@@ -66,9 +66,9 @@ function checklist() {
         console.log(as);
 
         // If we can't putArgumentState, that probably means we aren't
-        // a Carnap.io assignment.
+        // running within a Carnap assignment.
         try {
-          putAssignmentState(JSON.stringify(as));
+          putAssignmentState(as);
         } catch {
           console.log('Unable to putArgumentState');
         }
