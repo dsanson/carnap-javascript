@@ -6,119 +6,82 @@ js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=4
 
 Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
 
+Raw markdown:
+
+    Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
+
 # About
 
-This is a sample file, demonstrating the use of `timer.js`, a bit of javascript that provides a countdown timer for timed assignments on Carnap.io. For the source, see:
+This is a sample file, demonstrating the use of `timer.js`, a bit of
+javascript that provides a countdown timer for timed assignments on Carnap.io.
+For the source, see:
 
-<https://github.com/dsanson/carnap-javascript>. 
+<https://github.com/dsanson/carnap-javascript>.
 
 You can view this as a "live" document here:
 
 <https://carnap.io/shared/dsanson@gmail.com/Timer%20Example>
 
-If you are viewing this as as the live sample document in demo mode, you will see, after "Time Remaining" at the top of this page, a 5 minute countdown. When the time drops below 2 minutes, the timer will show both minutes and seconds.
+If you are viewing this as as the live sample document in demo mode, you will
+see, after "Time Remaining" at the top of this page, a 5 minute countdown.
+When the time drops below 2 minutes, the timer will show both minutes and
+seconds.
 
-To use this for real, upload a document to Carnap containing a link to the script in its YAML header:
+To use this for real, upload a document to Carnap containing a link to the
+script in its YAML header:
 
-```
----
-js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=4
----
-```
-
-# Timer
-
-Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
-
-```
-Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
-```
-
-
-# About
-
-This is a sample file, demonstrating the use of `timer.js`, a bit of javascript that provides a countdown timer for timed assignments on Carnap.io. For the source, see:
-
-<https://github.com/dsanson/carnap-javascript>. 
-
-You can view this as a "live" document here:
-
-<https://carnap.io/shared/dsanson@gmail.com/Timer%20Example>
-
-If you are viewing this as as the live sample document in demo mode, you will see, after "Time Remaining" at the top of this page, a 5 minute countdown.
-
-To use this for real, upload a document to Carnap containing a link to the script in its YAML header:
-
-```
----
-js: https://dsanson.github.io/carnap-javascript/js/checklist.js
----
-```
+    ---
+    js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=4
+    ---
 
 Include in the document a `span` or `div` with the id 'testTimer':
 
-```
-Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
-```
+    Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
 
-You can verify that the script is working by viewing your uploaded document, which should show you the demo 5 minute timer. You can then assign the document, and set a time limit. Verify that the script is working by opening the assignment. It should show you a timer counting down the time left for the assignment.
+You can verify that the script is working by viewing your uploaded document,
+which should show you the demo 5 minute timer. You can then assign the
+document, and set a time limit. Verify that the script is working by opening
+the assignment. It should show you a timer counting down the time left for the
+assignment.
 
 # How Much Detail to Display
 
-If an assignment has two days left, I don't think the students want to see the seconds ticking away. For now, the timer is hard-coded to display different levels of detail depending on how much time is left:
+If an assignment has two days left, I don't think the students want to see the
+seconds ticking away. For now, the timer is hard-coded to display different
+levels of detail depending on how much time is left:
 
 -   Days left are displayed when there is more than a day remaining.
 -   Hours left are displayed if there is more than an hour remaining.
--   Minutes left are displayed when there is less than a day but more than a minute emaining.
+-   Minutes left are displayed when there is less than a day but more than a
+    minute remaining.
 -   Seconds left displayed when there are less than 5 minutes remaining.
 
-These feel like features that should be configurable. But for the moment they are hardwired, so can only be configured by editing the script.
+These feel like features that should be configurable. But for the moment they
+are hardwired, so can only be configured by editing the script.
 
-# Custom CSS and Automatically Created DIV
+# Custom CSS
 
-You will probably want to adjust the appearance of your timer using custom CSS. To use the CSS, you need to add it to the YAML header of your document:
+You will probably want to adjust the appearance of your timer using custom
+CSS. You can use custom CSS by linking to it in your YAML header:
 
-```
----
-js: https://dsanson.github.io/carnap-javascript/js/timer.js
----
-```
+    ---
+    js: https://dsanson.github.io/carnap-javascript/js/timer.js
+    css: https://url-to-your-css
+    ---
 
-Include in the document a `span` or `div` with the id 'testTimer':
+If you want the timer in the top right corner of your window, you can use the
+CSS in my github repo:
 
-```
-Time Remaining: <span id="testTimer">SCRIPT NOT LOADED</span>
-```
+    ---
+    js: https://dsanson.github.io/carnap-javascript/js/timer.js
+    css: https://dsanson.github.io/carnap-javascript/css/timer.css
+    ---
 
-You can verify that the script is working by viewing your uploaded document, which should show you the demo 5 minute timer. You can then assign the document, and set a time limit. Verify that the script is working by opening the assignment. It should show you a timer counting down the time left for the assignment.
+# Automatic Creation of `<div id="testTimer>`
 
-# How Much Detail to Display
-
-If an assignment has two days left, I don't think the students want to see the seconds ticking away. For now, the timer is hard-coded to display different levels of detail depending on how much time is left:
-
--   Days left are displayed when there is more than a day remaining.
--   Hours left are displayed if there is more than an hour remaining.
--   Minutes left are displayed when there is less than a day but more than a minute emaining.
--   Seconds left displayed when there are less than 2 minutes remaining.
-
-These feel like features that should be configurable. But for the moment they are hardwired, so can only be configured by editing the script.
-
-# Automatically Created DIV and Custom CSS
-
-If the script doesn't find any element with the id 'testTimer' in your document, it will automatically create one, at the top of the `article` element:
-
-```
-<div id="testTimer"></div>
-```
-
-You will probably want to adjust the appearance of the timer using custom CSS. You can specify custom CSS using the YAML header. For example, to use the custom CSS included in my github repo, which puts the timer at the top right corner of the window, and adds "Time remaining: " before the timer itself:
-
-```
----
-js: https://dsanson.github.io/carnap-javascript/js/timer.js
-css: https://dsanson.github.io/carnap-javascript/css/timer.css
----
-```
+If you load the script on a page with no element with the id 'testTimer', the script will insert
+an appropriate `div` at the beginning of the `article` element. This works
+well when you plan to use custom CSS to position the timer.
 
 You can see a live demo here:
 
