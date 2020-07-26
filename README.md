@@ -18,9 +18,14 @@ But note that the script only works when the document is made into an
 # timer.js
 
 This is a very minimal implementation of a countdown timer for time-limited
-assignments on Carnap. For information on how to use it and how it works, see:
+assignments on Carnap. For a live demo that includes information on how to use
+it, see:
 
 <https://carnap.io/shared/dsanson@gmail.com/Timer%20Example>
+
+For a live demo that includes some custom css to position the timer, see:
+
+<https://carnap.io/shared/dsanson@gmail.com/Timer%20Example%20with%20Custom%20CSS>
 
 
 
