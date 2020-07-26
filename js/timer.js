@@ -5,38 +5,44 @@ function initTimer() {
     if (typeof availability_minutes === "undefined") {
         // demo mode
         console.log("demo mode");
-        availability_minutes = 5;
-        token_time = new Date().getTime();
+        var availability_minutes = 5;
+        var token_time = new Date().getTime();
     }
-    
+    if ($("#testTimer").length == 0 ) {
+        console.log('adding div')
+        var timerDiv = document.createElement("div");
+        timerDiv.id = '#testTimer';
+        $('body').append(timerDiv)
+    }
+
     // Helpful units
-    second = 1000;
-    minute = 60 * second;
-    hour = 60 * minute;
-    day = hour * 24;
+    var second = 1000;
+    var minute = 60 * second;
+    var hour = 60 * minute;
+    var day = hour * 24;
     
-    available = availability_minutes * minute; 
+    var available = availability_minutes * minute; 
 
     var x = setInterval(testTimer, second);
     function testTimer() {
-        now = new Date().getTime();
-        elapsed = now - token_time;
-        remaining = available - elapsed;
-        display = "";
+        var now = new Date().getTime();
+        var elapsed = now - token_time;
+        var remaining = available - elapsed;
+        var display = "";
         if (remaining > day) {
-            days = Math.floor(remaining / day);
+            var days = Math.floor(remaining / day);
             display = display + days + 'd ';
         }
         if (remaining > hour) {
-            hours = Math.floor((remaining % day) / hour);
+            var hours = Math.floor((remaining % day) / hour);
             display = display + hours  + 'h ';
         }
         if (3 * hour > remaining && remaining > minute) {
-            minutes = Math.floor((remaining % hour) / minute);
+            var minutes = Math.floor((remaining % hour) / minute);
             display = display + minutes + 'm ';
         }
         if (remaining < 2 * minute) {
-            seconds = Math.floor((remaining % minute) / second);
+            var seconds = Math.floor((remaining % minute) / second);
             display = display + seconds + 's ';
         }
         if (remaining < 0) {
