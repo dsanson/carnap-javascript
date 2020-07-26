@@ -8,12 +8,12 @@ function initTimer() {
         var availability_minutes = 5;
         var token_time = new Date().getTime();
     }
-    if ($("#testTimer").length == 0 ) {
-        console.log('adding div')
-        var timerDiv = document.createElement("div");
-        timerDiv.id = '#testTimer';
-        $('body').append(timerDiv)
-    }
+    // if ($("#testTimer").length == 0 ) {
+    //     console.log('adding div')
+    //     var timerDiv = document.createElement("div");
+    //     timerDiv.id = '#testTimer';
+    //     $('body').append(timerDiv)
+    // }
 
     // Helpful units
     var second = 1000;
