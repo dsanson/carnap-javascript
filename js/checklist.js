@@ -1,82 +1,80 @@
+/* eslint-env jquery */
+/* global AssignmentState, putAssignmentState, document */
+
 function checklist() {
-    // if we can't fetch AssignmentState, that means we are not
-    // a Carnap assignment. So we'll just go ahead and create an
-    // empty object.
-    try {
-        var as = JSON.parse(AssignmentState);
-    }
-    catch {
-        console.log("Unable to parse AssignmentState");
-        var as = {}
-    }
-    
-    // if this is the first time we run on a given assignment page,
-    // we need to create as["Checklist Items"]
-    if (typeof as["Checklist Items"] === "undefined") {
-        as["Checklist Items"] = {} 
-    }
-    
-    $(":checkbox").each(function() {
-        // pandoc disables all checkboxes by default, so we undisable them
-        $( this ).prop("disabled", false);
+  // If we can't fetch AssignmentState, that means we are not
+  // a Carnap assignment. So we'll just go ahead and create an
+  // empty object.
+  let as;
+  try {
+    as = JSON.parse(AssignmentState);
+  } catch {
+    console.log('Unable to parse AssignmentState');
+    as = {};
+  }
 
-        // set checkbox value attribute
-        if ($( this ).val() == "on" ) {
-            // find first sibling with a value or data-value attribute
-            e = $( this ).siblings('span[data-value],a[value],span[value],a[data-value]')
-            v = e.attr('data-value')
-            if (typeof v === 'undefined') {
-                v = e.attr('value')
-            }
-            if (typeof v === 'undefined') {
-                // fall back to the href of a link element
-                v = $( this ).siblings('a').attr("href")
-            }
-            if (typeof v === 'undefined') {
-                v = 'skip'
-            }
-            $( this ).val(v)
+  // If this is the first time we run on a given assignment page,
+  // we need to create as["Checklist Items"]
+  if (typeof as['Checklist Items'] === 'undefined') {
+    as['Checklist Items'] = {};
+  }
+
+  $(':checkbox').each(function () {
+    // Pandoc disables all checkboxes by default, so we undisable them
+    $(this).prop('disabled', false);
+
+    // Set checkbox value attribute
+    if ($(this).val() === 'on') {
+      // Find first sibling with a value or data-value attribute
+      const sib = $(this).siblings('span[data-value],a[value],span[value],a[data-value]');
+      let v = sib.attr('data-value');
+      if (typeof v === 'undefined') {
+        v = sib.attr('value');
+      }
+
+      if (typeof v === 'undefined') {
+        // Fall back to the href of a link element
+        v = $(this).siblings('a').attr('href');
+      }
+
+      if (typeof v === 'undefined') {
+        v = 'skip';
+      }
+
+      $(this).val(v);
+    }
+
+    // Apply stored settings from AssignmentState
+    if (as['Checklist Items'][$(this).val()]) {
+      $(this).prop('checked', true);
+    } else {
+      $(this).prop('checked', false);
+    }
+
+    $(this).click(function () {
+      // When an input box is clicked, update AssignmentState
+      const v = $(this).val();
+      if (v !== 'skip') {
+        if ($(this).is(':checked')) {
+          as['Checklist Items'][v] = true;
+          $(':checkbox[value="' + v + '"]').prop('checked', true);
+        } else {
+          as['Checklist Items'][v] = false;
+          $(':checkbox[value="' + v + '"]').prop('checked', false);
         }
 
-        // apply stored settings from AssignmentState
-        if (as["Checklist Items"][$( this ).val()]) {
-            $( this ).prop("checked", true);
-        }
-        else {
-            $( this ).prop("checked", false);
-        }
+        console.log(as);
 
-        $( this ).click(function () {
-            // when an input box is clicked, update AssignmentState
-            v = $( this ).val()
-            if (v !== 'skip') {
-                if ($( this ).is(":checked")) {
-                    as["Checklist Items"][v] = true;
-                    $(':checkbox[value="'+v+'"]').prop("checked", true);
-                }
-                else {
-                    as["Checklist Items"][v] = false;
-                    $(':checkbox[value="'+v+'"]').prop("checked", false);
-                }
-                console.log(as);
-                
-                // If we can't putArgumentState, that probably means we aren't
-                // a Carnap.io assignment.
-                try {
-                    putAssignmentState(JSON.stringify(as));
-                }
-                catch {
-                    console.log("Unable to putArgumentState")
-                }
-            }
-        });
-    }); 
+        // If we can't putArgumentState, that probably means we aren't
+        // a Carnap.io assignment.
+        try {
+          putAssignmentState(JSON.stringify(as));
+        } catch {
+          console.log('Unable to putArgumentState');
+        }
+      }
+    });
+  });
 }
 
-$( document ).ready(function() {
-    checklist();     
-)
-
-
-
-
+$(document).ready(checklist);
