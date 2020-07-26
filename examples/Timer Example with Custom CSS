@@ -1,0 +1,21 @@
+---
+js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=4
+css: https://dsanson.github.io/carnap-javascript/css/timer.css
+---
+
+# About
+
+This is a sample file, demonstrating the use of `timer.js`, a bit of javascript that provides a countdown timer for timed assignments on Carnap.io, together with some custom CSS. 
+
+To see it as a live demo, go here:
+
+<https://carnap.io/shared/dsanson@gmail.com/Timer%20Example%20with%20Custom%20CSS>
+
+For more details, see:
+
+<https://carnap.io/shared/dsanson@gmail.com/Timer%20Example>
+
+For the source, see:
+
+<https://github.com/dsanson/carnap-javascript>. 
+
