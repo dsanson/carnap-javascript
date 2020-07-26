@@ -1,9 +1,9 @@
 ---
 css: https://dsanson.github.io/carnap-javascript/css/timer.css
-js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=7
+js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=9
 ---
 
-<div id="#testTimer"></div>
+<div id="testTimer"></div>
 
 This is a sample file, demonstrating the use of `timer.js`, a bit of javascript that provides a countdown timer for timed assignments on Carnap.io. For the source, see:
 
