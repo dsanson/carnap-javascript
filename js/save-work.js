@@ -4,6 +4,8 @@
 // A script to save incomplete student work on Carnap.io
 
 function initSaveWork() {
+  const debug = true;
+  if (debug) console.log('save-work.js debugging on')
   // If we can't fetch AssignmentState, that means we are not
   // a Carnap assignment. So we'll just go ahead and create an
   // empty object.
@@ -12,7 +14,7 @@ function initSaveWork() {
     if (typeof AssignmentState === 'object') as = AssignmentState
     else throw "AssignmentState is not an object"
   } catch {
-    console.log('Unable to fetch AssignmentState');
+    if (debug) console.log('Unable to fetch AssignmentState');
     as = {};
   }
 
@@ -23,65 +25,66 @@ function initSaveWork() {
   }
 
   function saveWork() {
-    console.log('saving work');
+    if (debug) console.log('saving work');
     // Syntax Checking (not implemented)
     // Translation
     $('[data-carnap-type=translate]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      // ".slice(7)" to remove the 'saveAs:' prefix
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('input').val();
       as['Saved Work'][exerciseId] = studentWork;
-      console.log('Saving ' + exerciseId + ': ' + studentWork);
+      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
     // Qualitative Short Answer and Proofchecker
     $('[data-carnap-type=qualitative]',
       '[data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('textarea').val();
       as['Saved Work'][exerciseId] = studentWork;
-      console.log('Saving ' + exerciseId + ': ' + studentWork);
+      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       as['Saved Work'][exerciseId] = [];
-      console.log('Saving ' + exerciseId);
+      if (debug) console.log('Saving ' + exerciseId);
       $(this).find('select').each(function () {
         as['Saved Work'][exerciseId].push($(this).val());
       });
     });
     // Derivations
     $('[data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('textarea').val();
       as['Saved Work'][exerciseId] = studentWork;
-      console.log('Saving ' + exerciseId + ': ' + studentWork);
+      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
     // Model Checking
     // Multiple Choice and Numerical
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
 
-    console.log(JSON.stringify(as));
+    if (debug) console.log(JSON.stringify(as));
 
     // If we can't putArgumentState, that probably means we aren't
     // a Carnap.io assignment.
     try {
       putAssignmentState(as);
     } catch {
-      console.log('Unable to putAssignmentState');
+      if (debug) console.log('Unable to putAssignmentState');
     }
   }
 
   function loadWork() {
-    console.log('loading saved work');
+    if (debug) console.log('loading saved work');
     // Syntax Checking (not implemented)
     //
     // Translation 
     $('[data-carnap-type=translate]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
-        console.log('loading ' + exerciseId)
+        if (debug) console.log('loading ' + exerciseId)
         const studentWork = as['Saved Work'][exerciseId];
         $(this).find('input').val(studentWork);
       }
@@ -89,9 +92,9 @@ function initSaveWork() {
 
     // Qualitative Short Answer
     $('[data-carnap-type=qualitative]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
-        console.log('loading ' + exerciseId)
+        if (debug) console.log('loading ' + exerciseId)
         const studentWork = as['Saved Work'][exerciseId];
         $(this).find('textarea').val(studentWork);
       }
@@ -99,9 +102,9 @@ function initSaveWork() {
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
-        console.log('loading ' + exerciseId)
+        if (debug) console.log('loading ' + exerciseId)
         $(this).find('select').each(function () {
           const value = as['Saved Work'][exerciseId].shift();
           $(this).val(value);
@@ -110,9 +113,9 @@ function initSaveWork() {
     });
     // Derivations
     $('[data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission');
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
-        console.log('loading ' + exerciseId)
+        if (debug) console.log('loading ' + exerciseId)
         const studentWork = as['Saved Work'][exerciseId];
         $(this).find('textarea').val(studentWork);
       }
@@ -123,7 +126,7 @@ function initSaveWork() {
     // Gentzen-Prawitz Natural Deduction Problems
 
     // For debugging
-    console.log(JSON.stringify(as));
+    if (debug) console.log(JSON.stringify(as));
   }
 
   $(window).on('beforeunload', saveWork);
