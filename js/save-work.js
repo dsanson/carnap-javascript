@@ -27,16 +27,19 @@ function initSaveWork() {
   function saveWork() {
     if (debug) console.log('saving work');
     // Syntax Checking (not implemented)
-    // Translation
-    $('[data-carnap-type=translate]').each(function () {
+
+    // Translation and Numerical
+    $('[data-carnap-type=translate]',
+      '[data-carnap-qualitativetype=numerical]').each(function () {
       // ".slice(7)" to remove the 'saveAs:' prefix
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('input').val();
       as['Saved Work'][exerciseId] = studentWork;
       if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
-    // Qualitative Short Answer and Proofchecker
-    $('[data-carnap-type=qualitative]',
+
+    // Qualitative Short Answer and Derivations
+    $('[data-carnap-qualitativetype=shortanswer]',
       '[data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('textarea').val();
@@ -53,13 +56,8 @@ function initSaveWork() {
         as['Saved Work'][exerciseId].push($(this).val());
       });
     });
-    // Derivations
-    $('[data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
-      const studentWork = $(this).find('textarea').val();
-      as['Saved Work'][exerciseId] = studentWork;
-      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
-    });
+
+    // Multiple Choice
     // Model Checking
     // Multiple Choice and Numerical
     // Sequent Calculus Problems
@@ -80,8 +78,9 @@ function initSaveWork() {
     if (debug) console.log('loading saved work');
     // Syntax Checking (not implemented)
     //
-    // Translation 
-    $('[data-carnap-type=translate]').each(function () {
+    // Translation and Numerical
+    $('[data-carnap-type=translate]',
+      '[data-carnap-qualitativetype=numerical]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
@@ -90,8 +89,9 @@ function initSaveWork() {
       }
     });
 
-    // Qualitative Short Answer
-    $('[data-carnap-type=qualitative]').each(function () {
+    // Qualitative Short Answer and Derivations
+    $('[data-carnap-qualitativetype=shortanswer]',
+      '[data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
@@ -111,17 +111,8 @@ function initSaveWork() {
         });
       }
     });
-    // Derivations
-    $('[data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
-      if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
-        if (debug) console.log('loading ' + exerciseId)
-        const studentWork = as['Saved Work'][exerciseId];
-        $(this).find('textarea').val(studentWork);
-      }
-    });
+    // Multiple Choice
     // Model Checking
-    // Multiple Choice and Numerical
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
 
