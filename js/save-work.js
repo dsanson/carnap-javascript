@@ -69,7 +69,7 @@ function initSaveWork() {
     try {
       putAssignmentState(as);
     } catch {
-      console.log('Unable to putArgumentState');
+      console.log('Unable to putAssignmentState');
     }
   }
 
@@ -77,14 +77,23 @@ function initSaveWork() {
     console.log('loading saved work');
     // Syntax Checking (not implemented)
     //
-    // Translation and Qualitative Short Answer
-    $('[data-carnap-type=translate]',
-      '[data-carnap-type=qualitative]').each(function () {
+    // Translation 
+    $('[data-carnap-type=translate]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
         console.log('loading ' + exerciseId)
         const studentWork = as['Saved Work'][exerciseId];
-        $(this).find('input', 'textarea').val(studentWork);
+        $(this).find('input').val(studentWork);
+      }
+    });
+
+    // Qualitative Short Answer
+    $('[data-carnap-type=qualitative]').each(function () {
+      const exerciseId = $(this).attr('data-carnap-submission');
+      if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+        console.log('loading ' + exerciseId)
+        const studentWork = as['Saved Work'][exerciseId];
+        $(this).find('textarea').val(studentWork);
       }
     });
 
@@ -114,7 +123,7 @@ function initSaveWork() {
     // Gentzen-Prawitz Natural Deduction Problems
 
     // For debugging
-    console.log(as);
+    console.log(JSON.stringify(as));
   }
 
   $(window).on('beforeunload', saveWork);
