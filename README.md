@@ -1,7 +1,31 @@
 # carnap-javascript
 
-This is a place for me to put javascript snippets and widgets that are meant to work
+This is a place to put javascript snippets and widgets that are meant to work
 with <https://carnap.io>.
+
+I have a few ideas, and I'm happy to take other suggestions:
+
+- [x] persistent checklists
+    - [ ] tied to assignments and managed automatically
+- [x] countdown timer for timed assignments
+- [ ] save in-progress student work and automatically reload
+- [ ] reveal hints when a student gets an exercise wrong
+- [ ] exercise B is disabled until completion of exercise A
+    -   e.g., a multiple choice question asking whether a sentence is a
+        truth-functionally true, truth-functionally contingent, or
+        truth-functionally false is disabled
+        until after the associated truth table is complete.
+- [ ] progress meter (n out m exercises completed)
+    - [ ] textual progress meter
+    - [ ] graphical progress meter (e.g., horizontal bar at top or bottom of
+      page)
+- [ ] "cheesy" activity widgets, e.g.,
+    - [ ] matching exercises
+    - [ ] "fill-in-the-blank" propositional form exercises, and inference rule
+      form exercises.
+    - [ ] something for playing with inference rules, e.g., given sentence A,
+      student provides some sentence B, and they are shown what would follow
+      by rule R.
 
 # checklist.js
 
