@@ -7,13 +7,13 @@ function initSaveWork() {
   // If we can't fetch AssignmentState, that means we are not
   // a Carnap assignment. So we'll just go ahead and create an
   // empty object.
-  let as = {};
+  let as;
   try {
-    as = JSON.parse(AssignmentState);
+    if (typeof AssignmentState === 'object') as = AssignmentState
+    else throw "AssignmentState is not an object"
   } catch {
-    console.log('Unable to parse AssignmentState');
-    // const dummyAssignmentState = '{"Saved Work":{"saveAs:1.3":"Bob","saveAs:1.7":"Badly","saveAs:1.5":"Show (Q → P)\\nP :PR","saveAs:1.4":["-","-","-","F","-","F","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","T","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"]}}';
-    // as = JSON.parse(dummyAssignmentState);
+    console.log('Unable to fetch AssignmentState');
+    as = {};
   }
 
   // If this is the first time we run on a given assignment page,
@@ -57,13 +57,14 @@ function initSaveWork() {
     // If we can't putArgumentState, that probably means we aren't
     // a Carnap.io assignment.
     try {
-      putAssignmentState(JSON.stringify(as));
+      putAssignmentState(as);
     } catch {
       console.log('Unable to putArgumentState');
     }
   }
 
   function loadWork() {
+    console.log('loading saved work');
     // Syntax Checking (not implemented)
     //
     // Translation and Qualitative Short Answer
@@ -71,6 +72,7 @@ function initSaveWork() {
       '[data-carnap-type=qualitative]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+        console.log('loading ' + exerciseId)
         const studentWork = as['Saved Work'][exerciseId];
         $(this).find('input', 'textarea').val(studentWork);
       }
@@ -80,6 +82,7 @@ function initSaveWork() {
     $('[data-carnap-type=truthtable]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+        console.log('loading ' + exerciseId)
         $(this).find('select').each(function () {
           const value = as['Saved Work'][exerciseId].shift();
           $(this).val(value);
@@ -90,6 +93,7 @@ function initSaveWork() {
     $('[data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
       if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+        console.log('loading ' + exerciseId)
         const studentWork = as['Saved Work'][exerciseId];
         $(this).find('textarea').val(studentWork);
       }
