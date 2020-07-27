@@ -25,9 +25,15 @@ function initSaveWork() {
   function saveWork() {
     console.log('saving work');
     // Syntax Checking (not implemented)
-    // Translation, and Qualitative Short Answer
-    $('[data-carnap-type=translate]',
-      '[data-carnap-type=qualitative]',
+    // Translation
+    $('[data-carnap-type=translate]').each(function () {
+      const exerciseId = $(this).attr('data-carnap-submission');
+      const studentWork = $(this).find('input').val();
+      as['Saved Work'][exerciseId] = studentWork;
+      console.log('Saving ' + exerciseId + ': ' + studentWork);
+    });
+    // Qualitative Short Answer and Proofchecker
+    $('[data-carnap-type=qualitative]',
       '[data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
       const studentWork = $(this).find('input', 'textarea').val();
