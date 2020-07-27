@@ -1,5 +1,5 @@
 ---
-js: https://carnap.io/shared/dsanson@gmail.com/save-work.js?v=2
+js: https://dsanson.github.io/carnap-javascript/js/save-work.js?v=5
 ---
 
 This is a test page for testing `save-work.js`, a script meant to save student work in progress, and reload it on page reloads.
@@ -41,15 +41,27 @@ This is a test page for testing `save-work.js`, a script meant to save student w
 1.7 How are you feeling today?
 ```
 
+```{.QualitativeProblem .MultipleChoice}
+1.8 How are you feeling today?
+| Good!
+| +OK!
+| Meh.
+```
+
+```{.QualitativeProblem .Numerical}
+1.9 8 : How many bits in a byte?
+| 2^3
+```
+
 ## Sequent Calculus Problems
 
 ```{.Sequent .propLK}
-1.8 P->Q, Q->R :|-: P->R
+1.10 P->Q, Q->R :|-: P->R
 ```
 
 ## Gentzen-Prawitz Natural Deduction Problems
 
 ```{.TreeDeduction .propNK}
-1.9 P\/Q, ~P :|-: Q 
+1.11 P\/Q, ~P :|-: Q 
 ```
 

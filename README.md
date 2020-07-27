@@ -51,5 +51,7 @@ For a live demo that includes some custom css to position the timer, see:
 
 <https://carnap.io/shared/dsanson@gmail.com/Timer%20Example%20with%20Custom%20CSS>
 
+# save-work.js (in progress, not yet working)
 
-
+This doesn't work yet. It saves student work, and reloads that work on page
+reload.
