@@ -103,10 +103,10 @@ function initSaveWork() {
     console.log(as);
   }
 
-  loadWork();
   $(window).on('beforeunload', saveWork);
   $(window).on('blur', saveWork);
+  document.addEventListener('carnap-loaded', loadWork);
 }
 
-// $(document).ready(initSaveWork);
-$(window).on('load', initSaveWork);
+$(document).ready(initSaveWork);
+// $(window).on('load', initSaveWork);
