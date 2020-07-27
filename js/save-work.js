@@ -23,6 +23,7 @@ function initSaveWork() {
   }
 
   function saveWork() {
+    console.log('saving work');
     // Syntax Checking (not implemented)
     // Translation, and Qualitative Short Answer
     $('[data-carnap-type=translate]',
@@ -31,12 +32,14 @@ function initSaveWork() {
       const exerciseId = $(this).attr('data-carnap-submission');
       const studentWork = $(this).find('input', 'textarea').val();
       as['Saved Work'][exerciseId] = studentWork;
+      console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
       as['Saved Work'][exerciseId] = [];
+      console.log('Saving ' + exerciseId);
       $(this).find('select').each(function () {
         as['Saved Work'][exerciseId].push($(this).val());
       });
@@ -46,6 +49,7 @@ function initSaveWork() {
       const exerciseId = $(this).attr('data-carnap-submission');
       const studentWork = $(this).find('textarea').val();
       as['Saved Work'][exerciseId] = studentWork;
+      console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
     // Model Checking
     // Multiple Choice and Numerical
