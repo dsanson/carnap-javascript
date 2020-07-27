@@ -7,9 +7,10 @@ function checklist() {
   // empty object.
   let as;
   try {
-    as = JSON.parse(AssignmentState);
+    if (typeof AssignmentState === 'object') as = AssignmentState
+    else throw "AssignmentState is not an object"
   } catch {
-    console.log('Unable to parse AssignmentState');
+    console.log('Unable to fetch AssignmentState');
     as = {};
   }
 
@@ -68,7 +69,7 @@ function checklist() {
         // If we can't putArgumentState, that probably means we aren't
         // a Carnap.io assignment.
         try {
-          putAssignmentState(JSON.stringify(as));
+          putAssignmentState(as);
         } catch {
           console.log('Unable to putArgumentState');
         }
