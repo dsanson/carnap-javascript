@@ -1,5 +1,5 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/save-work.js?v=5
+js: https://dsanson.github.io/carnap-javascript/js/save-work.js?v=6
 ---
 
 This is a test page for testing `save-work.js`, a script meant to save student work in progress, and reload it on page reloads.
