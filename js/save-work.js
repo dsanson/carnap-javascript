@@ -36,7 +36,7 @@ function initSaveWork() {
     $('[data-carnap-type=qualitative]',
       '[data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission');
-      const studentWork = $(this).find('input', 'textarea').val();
+      const studentWork = $(this).find('textarea').val();
       as['Saved Work'][exerciseId] = studentWork;
       console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
