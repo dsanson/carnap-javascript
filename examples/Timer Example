@@ -1,5 +1,5 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=4
+js: https://carnap.io/shared/dsanson@gmail.com/timer.js
 ---
 
 # Timer
@@ -24,14 +24,14 @@ You can view this as a "live" document here:
 
 If you are viewing this as as the live sample document in demo mode, you will
 see, after "Time Remaining" at the top of this page, a 5 minute countdown.
-When the time drops below 2 minutes, the timer will show both minutes and
+When the time drops below 5 minutes, the timer will show both minutes and
 seconds.
 
 To use this for real, upload a document to Carnap containing a link to the
 script in its YAML header:
 
     ---
-    js: https://dsanson.github.io/carnap-javascript/js/timer.js?v=4
+    js: https://carnap.io/shared/dsanson@gmail.com/timer.js
     ---
 
 Include in the document a `span` or `div` with the id 'testTimer':
@@ -62,14 +62,7 @@ are hardwired, so can only be configured by editing the script.
 # Custom CSS
 
 You will probably want to adjust the appearance of your timer using custom
-CSS. You can use custom CSS by linking to it in your YAML header:
-
-    ---
-    js: https://dsanson.github.io/carnap-javascript/js/timer.js
-    css: https://url-to-your-css
-    ---
-
-If you want the timer in the top right corner of your window, you can use the
+CSS. For example, if you want the timer in the top right corner of your window, you can use the
 CSS in my github repo:
 
     ---
@@ -83,6 +76,6 @@ If you load the script on a page with no element with the id 'testTimer', the sc
 an appropriate `div` at the beginning of the `article` element. This works
 well when you plan to use custom CSS to position the timer.
 
-You can see a live demo here:
+You can see a live demo with custom CSS here:
 
 <https://carnap.io/shared/dsanson@gmail.com/Timer%20Example%20with%20Custom%20CSS>

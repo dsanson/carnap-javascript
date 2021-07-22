@@ -5,55 +5,59 @@
 
 function initSaveWork() {
   const debug = true;
-  if (debug) console.log('save-work.js debugging on')
-  // If we can't fetch AssignmentState, that means we are not
-  // a Carnap assignment. So we'll just go ahead and create an
-  // empty object.
-  let as;
-  try {
-    if (typeof AssignmentState === 'object') as = AssignmentState
-    else throw "AssignmentState is not an object"
-  } catch {
-    if (debug) console.log('Unable to fetch AssignmentState');
-    as = {};
-  }
+  const namespace = 'saved-work';
+  let items;
 
-  // If this is the first time we run on a given assignment page,
-  // we need to create as["Saved Work"]
-  if (typeof as['Saved Work'] === 'undefined') {
-    as['Saved Work'] = {};
-  }
+  if (debug) console.log('save-work.js debugging on')
 
   function saveWork() {
     if (debug) console.log('saving work');
     // Syntax Checking (not implemented)
 
     // Translation and Numerical
-    $('[data-carnap-type=translate]',
-      '[data-carnap-qualitativetype=numerical]').each(function () {
+    $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
       // ".slice(7)" to remove the 'saveAs:' prefix
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('input').val();
-      as['Saved Work'][exerciseId] = studentWork;
+      items[exerciseId] = studentWork;
       if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
     });
 
     // Qualitative Short Answer and Derivations
-    $('[data-carnap-qualitativetype=shortanswer]',
-      '[data-carnap-type=proofchecker]').each(function () {
+    $('[data-carnap-qualitativetype=shortanswer], [data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
       const studentWork = $(this).find('textarea').val();
-      as['Saved Work'][exerciseId] = studentWork;
+      items[exerciseId] = studentWork;
       if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
+    });
+
+    // Countermodels
+    $('[data-carnap-type=countermodeler]').each(function () {
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      items[exerciseId] = [];
+      if (debug) console.log('Saving ' + exerciseId);
+      $(this).find('textarea').each(function () {
+        items[exerciseId].push($(this).val());
+      });
     });
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
-      as['Saved Work'][exerciseId] = [];
+      items[exerciseId] = [];
       if (debug) console.log('Saving ' + exerciseId);
       $(this).find('select').each(function () {
-        as['Saved Work'][exerciseId].push($(this).val());
+        items[exerciseId].push($(this).val());
+      });
+    });
+
+    // Multiple Choice and Multiple Selection
+    $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      items[exerciseId] = [];
+      if (debug) console.log('Saving ' + exerciseId);
+      $(this).find('input').each(function () {
+        items[exerciseId].push($(this).prop('checked'));
       });
     });
 
@@ -63,12 +67,12 @@ function initSaveWork() {
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
 
-    if (debug) console.log(JSON.stringify(as));
+    if (debug) console.log(JSON.stringify(items));
 
     // If we can't putArgumentState, that probably means we aren't
     // a Carnap.io assignment.
     try {
-      putAssignmentState(as);
+      CarnapServerAPI.putAssignmentState(namespace,items);
     } catch {
       if (debug) console.log('Unable to putAssignmentState');
     }
@@ -79,50 +83,94 @@ function initSaveWork() {
     // Syntax Checking (not implemented)
     //
     // Translation and Numerical
-    $('[data-carnap-type=translate]',
-      '[data-carnap-qualitativetype=numerical]').each(function () {
+    $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
-      if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+      if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
-        const studentWork = as['Saved Work'][exerciseId];
+        const studentWork = items[exerciseId];
         $(this).find('input').val(studentWork);
       }
     });
 
     // Qualitative Short Answer and Derivations
-    $('[data-carnap-qualitativetype=shortanswer]',
-      '[data-carnap-type=proofchecker]').each(function () {
+    $('[data-carnap-qualitativetype=shortanswer], [data-carnap-type=proofchecker]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
-      if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+      if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
-        const studentWork = as['Saved Work'][exerciseId];
+        const studentWork = items[exerciseId];
         $(this).find('textarea').val(studentWork);
+      }
+    });
+
+    // Countermodels
+    $('[data-carnap-type=countermodeler]').each(function () {
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
+      if (typeof items[exerciseId] !== 'undefined') {
+        if (debug) console.log('loading ' + exerciseId)
+        $(this).find('textarea').each(function () {
+          const value = items[exerciseId].shift();
+          $(this).val(value);
+        });
       }
     });
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
-      if (typeof as['Saved Work'][exerciseId] !== 'undefined') {
+      if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
         $(this).find('select').each(function () {
-          const value = as['Saved Work'][exerciseId].shift();
+          const value = items[exerciseId].shift();
           $(this).val(value);
         });
       }
     });
-    // Multiple Choice
+    
+    // Multiple Choice and Multiple Selection
+      $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
+      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
+      if (typeof items[exerciseId] !== 'undefined') {
+        if (debug) console.log('loading ' + exerciseId)
+        $(this).find('input').each(function () {
+          const value = items[exerciseId].shift();
+          $(this).prop('checked', value);
+        });
+      }
+    });
+
     // Model Checking
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
 
     // For debugging
-    if (debug) console.log(JSON.stringify(as));
+    if (debug) console.log(JSON.stringify(items));
   }
 
-  $(window).on('beforeunload', saveWork);
-  $(window).on('blur', saveWork);
-  document.addEventListener('carnap-loaded', loadWork);
+  function successCallback(as) {
+    if (debug) console.log('success: ' + as)
+
+    // read assignment state
+    if (typeof as[namespace] === 'undefined') {
+      items = {};
+    } else {
+      items = as[namespace];
+    }
+
+    $(window).on('beforeunload', saveWork);
+    $(window).on('blur', saveWork);
+    document.addEventListener('carnap-loaded', loadWork);
+  }
+
+  function failureCallback(error) {
+    if (debug) console.log('failure: ' + error)
+  }
+
+  try {
+    CarnapServerAPI.getAssignmentState().then(successCallback, failureCallback);
+  } catch {
+    if (debug) console.log('Unable to access CarnapServerAPI');
+  }
+
 }
 
 $(document).ready(initSaveWork);

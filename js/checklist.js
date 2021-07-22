@@ -1,30 +1,48 @@
 /* eslint-env jquery */
 /* global AssignmentState, putAssignmentState, document */
 
-function checklist() {
-  // If we can't fetch AssignmentState, that means we are not
-  // a Carnap assignment. So we'll just go ahead and create an
-  // empty object.
-  let as;
-  try {
-    if (typeof AssignmentState === 'object') as = AssignmentState
-    else throw "AssignmentState is not an object"
-  } catch {
-    console.log('Unable to fetch AssignmentState');
-    as = {};
-  }
+function gather_exercises() {
+  let exs;
+  exs = [];
+  // Create checkboxes beside each exercise
+  $('.exercise').each(function () {
+    s = $(this).children('span');
+    if (s.length > 1) {
+      v = s.eq(0).text();
+      exs.push(v)
+      s.eq(1).append(' <input type="checkbox" value="' + v + '">');
+    }
+  });
+  return exs
+}
 
-  // If this is the first time we run on a given assignment page,
-  // we need to create as["Checklist Items"]
-  if (typeof as['Checklist Items'] === 'undefined') {
-    as['Checklist Items'] = {};
-  }
+function create_checklist(exs) {
+  pts = 10;
+  total = pts * exs.length
+  $('.auto-tally').each(function() {
+    report = $("<div/>")
+    report.attr("class", "report")
+    report.html('<span class=score>0</span> out of <span class=total>' + total + '</span>: <span class=pct>0</span>%')
+    listdiv = $("<div/>")
+    listdiv.attr("class", "four-column")
+    list = $("<ul/>")
+    for (i = 0; i < exs.length; i++) {
+      list.append('<li> <input type="checkbox" value="' + exs[i] + '"> <a href="#exercise-' + exs[i] + '">' + exs[i] + '</a></li>') 
+    }
+    listdiv.append(list)
+    $(this).attr("points", pts)
+    $(this).attr("total", total)
+    $(this).append(report)
+    $(this).append(listdiv)
+  });
+}
 
+function process_checkboxes(items,namespace) {
   $(':checkbox').each(function () {
-    // Pandoc disables all checkboxes by default, so we undisable them
+    // enable checkboxes
     $(this).prop('disabled', false);
 
-    // Set checkbox value attribute
+    // set checkbox value attribute
     if ($(this).val() === 'on') {
       // Find first sibling with a value or data-value attribute
       const sib = $(this).siblings('span[data-value],a[value],span[value],a[data-value]');
@@ -45,37 +63,83 @@ function checklist() {
       $(this).val(v);
     }
 
-    // Apply stored settings from AssignmentState
-    if (as['Checklist Items'][$(this).val()]) {
+    // apply stored settings
+    if (items[$(this).val()]) {
       $(this).prop('checked', true);
     } else {
       $(this).prop('checked', false);
     }
 
+    // create function to update on click
     $(this).click(function () {
-      // When an input box is clicked, update AssignmentState
-      const v = $(this).val();
+      const v = $(this).val()
       if (v !== 'skip') {
         if ($(this).is(':checked')) {
-          as['Checklist Items'][v] = true;
+          items[v] = true;
           $(':checkbox[value="' + v + '"]').prop('checked', true);
         } else {
-          as['Checklist Items'][v] = false;
+          items[v] = false;
           $(':checkbox[value="' + v + '"]').prop('checked', false);
         }
-
-        console.log(as);
-
-        // If we can't putArgumentState, that probably means we aren't
-        // a Carnap.io assignment.
-        try {
-          putAssignmentState(as);
-        } catch {
-          console.log('Unable to putArgumentState');
-        }
+        console.log(items);
+        CarnapServerAPI.putAssignmentState(namespace,items);
       }
     });
   });
 }
 
-$(document).ready(checklist);
+function checklist() {
+
+  let namespace = 'checklist';
+
+  CarnapServerAPI.getAssignmentState().then(function(as){
+    // read assignment state
+    if (typeof as[namespace] === 'undefined') {
+      items = {};
+    } else {
+      items = as[namespace];
+    }
+    items = as;
+    
+    let exs = gather_exercises()
+    create_checklist(exs)
+    process_checkboxes(items,namespace)
+
+  });
+}
+
+function tallychecklist() {
+  $('div.auto-tally, div.tally').each(function() {
+    points=Number($(this).attr('points'))
+    total=Number($(this).attr('total'))
+    score = 0
+    $(this).find(':checkbox').each(function() {
+      if ($(this).prop('checked')) {
+        score = score + points
+      }
+    })
+    $(this).find('.score').each(function(){
+      $(this).text(score)
+    })
+    $(this).find('.total').each(function(){
+      $(this).text(total)
+    })
+    $(this).find('.pct').each(function(){
+      $(this).text(Math.floor(score / total * 100))
+    })
+  })
+}
+
+function tallycheck() {
+  $(':checkbox').each(function() {
+    $(this).click(function() {tallychecklist()})
+  })
+  tallychecklist()
+}
+
+function main() {
+  checklist();
+  tallycheck();
+}
+
+$(document).ready(main);

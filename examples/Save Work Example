@@ -1,8 +1,8 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/save-work.js?v=6
+js: https://carnap.io/shared/dsanson@gmail.com/save-work.js
 ---
 
-This is a test page for testing `save-work.js`, a script meant to save student work in progress, and reload it on page reloads.
+This is a test page for testing `save-work.js`, a script meant to save student work in progress, and reload it on page reloads. Note that this depends on Carnap's AssignmentState API, which only works for *assigned* pages.
 
 ## Syntax Checking
 
@@ -45,6 +45,13 @@ This is a test page for testing `save-work.js`, a script meant to save student w
 1.8 How are you feeling today?
 | Good!
 | +OK!
+| Meh.
+```
+
+```{.QualitativeProblem .MultipleSelection}
+1.8 How are you feeling today?
+| Good!
+| OK!
 | Meh.
 ```
 
