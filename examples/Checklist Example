@@ -34,6 +34,32 @@ server, so that when a student reloads an assignment, or loads an
 assignment on a different device, boxes that they have checked will
 remain checked.
 
+## What's point?
+
+I use checkboxes to provide my students with a way of keeping track of their
+own progress. I do this in two ways. First, I provide them with an overview
+document, that lists each course module, and what needs to be done to complete
+each module. Students can check things off as they complete them, and so keep
+track of their progress in the course overall.
+
+Second, for any assignment that contains exercises, I use this script to
+include an automatically generated checklist of all those exercises. Students
+can check off each exercise as they complete it, and so keep track of which
+exercises still need to be done.
+
+It is important to understand that these checkboxes are just a tool for the
+student to keep track of things for themselves. They are not linked to
+Carnap's submission data, or our CMS gradebook, or anything like that. Still,
+the students find them useful.
+
+Ultimately, I'd like to offer the students a "guide me" mode. The idea is
+that, if they view the course overview document in "guide me" mode, it will
+dim the items that they have checked off as completed and items that they are not yet ready
+to attempt, and focus the items that they should be working on now. A similar
+"guide me" mode for exercises might collapse exercises they have checked as
+completed, and focus their attention on the next exercise they need to
+attempt.
+
 ## The `value` attribute
 
 HTML checkboxes can be assigned a `value` attribute. The script uses
