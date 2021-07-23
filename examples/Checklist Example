@@ -1,67 +1,60 @@
 ---
-js: https://dsanson.github.io/carnap-javascript/js/checklist.js?v=20
+js: "https://carnap.io/shared/dsanson@gmail.com/checklist.js"
 ---
 
-This is a sample file, demonstrating the use of `checklist.js`, a bit of javascript that enables persistent checklists for assigned documents on Carnap: 
+## checklist.js
+
+This is a sample file, demonstrating the use of `checklist.js`, a bit of
+javascript that enables persistent checklists for assigned documents on
+Carnap. You can find the script on github:
 
 <https://github.com/dsanson/carnap-javascript>.
 
-To use `checklist.js` on your own documents, include a link to the script in
-the YAML header:
+I have also uploaded the script as a public document on Carnap. So the
+easiest way to use it is to include this in the YAML header of one of
+your Carnap assignments:
 
-```
----
-js: https://dsanson.github.io/carnap-javascript/js/checklist.js
----
-```
+    ---
+    js: https://carnap.io/shared/dsanson@gmail.com/checklist.js
+    ---
 
-Note that the checklists will only be persistent when this document is made
-into an actual assignment on Carnap, as the relevant javascript functions are
-only available for assignments. So if you want to play around with this file
-in Carnap, you need to download it, then upload it, then assign it to a
-course.
+Note that the script depends on the Carnap server's [AssignmentState
+API](https://carnap.io/srv/doc/javascript.md), which only works for
+*assignments*. So if you are viewing this page as a shared document that
+has not actually been assigned, the checkboxes will not be persistent.
+For a fully functioning demo, you will need to upload this document to
+your own account, and assign it to a course.
 
-# A Canonical Example, Using Raw HTML
+## Basic idea
 
-Here is a checklist:
+By default, interactive checkboxes in html are not persistent across
+reloads. So if you check a box, and then reload the page, the state of
+the checkbox is lost. This script saves checkbox states to the Carnap
+server, so that when a student reloads an assignment, or loads an
+assignment on a different device, boxes that they have checked will
+remain checked.
 
-<ul>
-<li><input type="checkbox" value="syllabus" />
-Read the syllabus</li>
-<li><input type="checkbox" value="quiz 1" />
-Complete the syllabus quiz</li>
-<li><input type="checkbox" value="sign up" />
-Create an account on Carnap.io</li>
-</ul>
+## The `value` attribute
 
-Here is the raw html I used for this checklist:
+HTML checkboxes can be assigned a `value` attribute. The script uses
+this attribute for two important purposes. First, it uses the `value`
+attribute to identify the stored state of a checkbox. This means that a
+checkbox without a `value` attribute will not be identified, and so its
+state will not be persistent. Second, because it uses the `value`
+attribute to identify checkboxes, checkboxes with the same `value`
+attribute will be "linked", in the sense that, if one is checked, they
+will all be checked.
 
-```html
-<ul>
-<li><input type="checkbox" value="syllabus" />
-Read the syllabus</li>
-<li><input type="checkbox" value="quiz 1" />
-Complete the syllabus quiz</li>
-<li><input type="checkbox" value="sign up" />
-Create an account on Carnap.io</li>
-</ul>
-```
+So the `value` attribute of a checkbox is important to us. But it is
+annoying to set this attribute manually to the checkbox element itself.
+So the script tries to assign `value` attribute intelligently, as
+described below.
 
-Each checkbox is identified by its `value` attribute, and its status is saved
-to the Carnap Server, indexed by that attribute. Checkboxes with the same
-value attribute are synchronized: 
+## Markdown task lists
 
-<ul>
-<li><input type="checkbox" value="syllabus" />
-This item also has its value set to `syllabus`</li>
-</ul>
+Carnap supports supports github style task lists. For example,
 
-# Pandoc's `task_lists` Extension
-
-Pandoc supports github style task lists, using the `task_lists` extension. For
-example,
-
-```markdown
+``` markdown
 - [ ] item 0
 - [ ] item 2
 - [ ] item 3
@@ -69,104 +62,253 @@ example,
 
 Gets rendered as:
 
-- [ ] item 1
-- [ ] item 2
-- [ ] item 3
+-   [ ] item 1
+-   [ ] item 2
+-   [ ] item 3
 
-Pandoc does not set `value` attributes for the checkboxes. So these items
-won't be saved to the Carnap server. Pandoc also disables the checkboxes. This
-script un-disables them, so they can be used dynamically.
+By default, these checkboxes will not be interactive, and will not have
+a `value` attribute set. This script will make each checkbox
+interactive, and will try to assign it an appropriate `value` attribute.
 
-## Setting the value using spans or links
+## Setting a `value` attribute explicitly
 
-To get around this, the script will look for `span` elements and anchor
-elements (links) that
-have a `value` attribute set, and use that `value` to set the `value`
-attribute for the checkbox:
+If a checkbox does not have a set `value` attribute, the script looks
+for a sibling `span` element or link (`a`) element that does have a
+`value` attribute set, and applies that `value` attribute to the
+checkbox.
 
-```markdown
+For example, this markdown will create three checkboxes, and the first
+and third linked as 'item 1':
+
+``` markdown
 - [ ] <span value='item 1'>Item 1</span>
 - [ ] item 2<span value='item 2'></span>
 - [ ] <a href="#" value='item 1'>Item 1 again</a>
 ```
 
-- [ ] <span data-value='item 1'>Item 1</span>
-- [ ] item 2<span data-value='item 2'></span>
-- [ ] <a href="#" value='item 1'>Item 1 again</a>
+Here is how that gets rendered:
 
-Here I used raw html to specify the value attributes. You can also use pandoc's `link_attributes` and `span_attributes` syntax for
-this purpose. (But these are not currently enabled on Carnap.io, so this won't
-work.)
+-   [ ] [Item 1]{data-value="item 1"}
+-   [ ] item 2[]{data-value="item 2"}
+-   [ ] `<a href="#" value='item 1'>`{=html}Item 1 again`</a>`{=html}
 
-```markdown
+And it is easy to add another checkbox, linked to item 2:
+
+``` markdown
 - [ ] [Item 2 Again]{value="item 2"}
 ```
 
-- [ ] [Item 2 Again]{value="item 2"}
+-   [ ] [Item 2 Again]{value="item 2"}
 
-If there are multiple spans are links with the attribute `value` set, the
-script will use the first one it finds:
+If there are multiple sibling span and link elements with set `value`
+attributes, the script uses the first:
 
-```markdown
+``` markdown
 - [ ] [Item 1 Again]{value="item 1"} or [Item 2 Again]{value="item 2"}?
 ```
 
-- [ ] [Item 1 Again]{value="item 1"} or [Item 2 Again]{value="item 2"}?
+-   [ ] [Item 1 Again]{value="item 1"} or [Item 2
+    Again]{value="item 2"}?
 
-## Falling Back to `href`
+## Setting `value` implicitly by URL
 
-It is convenient to generate checklists using pandoc's
-`--toc` function, which will generate an unordered list with unique
-identifiers for each section header.
+If a checkbox has no sibling span or link elements with set `value`
+attributes, the script looks for the first sibling link element that has
+an `href` attribute, and uses that to set the value attribute of the
+checkbox.
 
-For example, here is the table of contents generated by
-pandoc for this document (`pandoc --toc -t markdown -s`):
+This means that you can easily generate a checklist using pandoc's
+`--toc` function. For example, here is what pandoc generates for this
+document: for this document: for this document: for this document:
 
-```markdown
--   [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
--   [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
-    -   [Setting the value using spans or
-        links](#setting-the-value-using-spans-or-links)
-    -   [Falling Back to `href`](#falling-back-to-href)
+``` markdown
+-   [checklist.js](#checklist.js)
+-   [Basic idea](#basic-idea)
+-   [The `value` attribute](#the-value-attribute)
+-   [Markdown task lists](#markdown-task-lists)
+-   [Setting a `value` attribute
+    explicitly](#setting-a-value-attribute-explicitly)
+-   [Setting `value` implicitly by
+    URL](#setting-value-implicitly-by-url)
+-   [What if no `value` attribute can be
+    assigned?](#what-if-no-value-attribute-can-be-assigned)
+-   [Automatic checklists for
+    exercises](#automatic-checklists-for-exercises)
+-   [Exercise checkboxes](#exercise-checkboxes)
+-   [Progress reports](#progress-reports)
+-   [Sample exercises](#sample-exercises)
 ```
 
-It is easy to turn this into a checklist by adding github style check boxes:
+We can add github style task list checkboxes to each item:
 
-```markdown
-- [ ] [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
-- [ ] [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
-    - [ ] [Setting the value using spans or
-        links](#setting-the-value-using-spans-or-links)
-    - [ ] [Falling Back to `href`](#falling-back-to-href)
+``` markdown
+- [ ] [checklist.js](#checklist.js)
+- [ ] [Basic idea](#basic-idea)
+- [ ] [The `value` attribute](#the-value-attribute)
+- [ ] [Markdown task lists](#markdown-task-lists)
+- [ ] [Setting a `value` attribute
+    explicitly](#setting-a-value-attribute-explicitly)
+- [ ] [Setting `value` implicitly by
+    URL](#setting-value-implicitly-by-url)
+- [ ] [What if no `value` attribute can be
+    assigned?](#what-if-no-value-attribute-can-be-assigned)
+- [ ] [Automatic checklists for
+    exercises](#automatic-checklists-for-exercises)
+- [ ] [Exercise checkboxes](#exercise-checkboxes)
+- [ ] [Progress reports](#progress-reports)
+- [ ] [Sample exercises](#sample-exercises)
 ```
 
-- [ ] [A Canonical Example, Using Raw HTML](#a-canonical-example-using-raw-html)
-- [ ] [Pandoc's `task_lists` Extension](#pandocs-task_lists-extension)
-    - [ ] [Setting the value using spans or
-        links](#setting-the-value-using-spans-or-links)
-    - [ ] [Falling Back to `href`](#falling-back-to-href)
+And here is how that renders:
 
-If the script cannot find any explicit `value` attributes, it will fall back
-to using the value of the first `a` element with an `href` as the checkbox
-identifier.
+- [ ] [checklist.js](#checklist.js)
+- [ ] [Basic idea](#basic-idea)
+- [ ] [The `value` attribute](#the-value-attribute)
+- [ ] [Markdown task lists](#markdown-task-lists)
+- [ ] [Setting a `value` attribute
+    explicitly](#setting-a-value-attribute-explicitly)
+- [ ] [Setting `value` implicitly by
+    URL](#setting-value-implicitly-by-url)
+- [ ] [What if no `value` attribute can be
+    assigned?](#what-if-no-value-attribute-can-be-assigned)
+- [ ] [Automatic checklists for
+    exercises](#automatic-checklists-for-exercises)
+- [ ] [Exercise checkboxes](#exercise-checkboxes)
+- [ ] [Progress reports](#progress-reports)
+- [ ] [Sample exercises](#sample-exercises)
 
-Note that this is dangerous. If edit your document after
-you've assigned it, changing the section headings, and then regenerate
-the checklist, some or all of the checkbox identifiers will change. A less
-dangerous option is to provide explicit identifiers using the `value`
-attribute:
+These checkboxes will be persistent, and if repeated in the same
+document, will be linked:
 
-- [ ] [A Canonical Example, Using Raw
-    HTML](#a-canonical-example-using-raw-html){value="canonical"}
-- [ ] [Pandoc's `task_lists`
-    Extension](#pandocs-task_lists-extension){value="task_lists"}
-    - [ ] [Setting the value using spans or
-        links](#setting-the-value-using-spans-or-links){value="spans"}
-    - [ ] [Falling Back to `href`](#falling-back-to-href){value="href"}
-
-Alternatively, you can explicitly set heading identifiers, rather than relying
-on pandoc to generate the reference links:
-
-```markdown
-# A Canonical Example, Using Raw HTML{#canonical}
+``` markdown
+- [ ] [Setting `value` implicitly by
+    URL](#setting-value-implicitly-by-url)
 ```
+
+- [ ] [Setting `value` implicitly by
+    URL](#setting-value-implicitly-by-url)
+
+
+Note that if you edit your section headings, the checkbox values will
+change, and so the state of those checkboxes will be lost. You can avoid
+this by setting an explicit `value` attribute for each item:
+
+    - [ ] [Setting a `value` attribute implicitly by
+        URL](#setting-a-value-attribute-implicitly-by-url){value='by-url'}
+
+But a better solution is to use explicit identifiers on your section
+headings:
+
+``` markdown
+## Setting `value` implicitly by URL {#by-url}
+```
+
+Note that it is also easy to add linked checkboxes at the end of each
+section, so your students can keep track of their reading progress as
+they go:
+
+``` markdown
+- [ ] [Check this box when you complete reading this
+  section]{value='#setting-value-implicitly-by-url'}
+```
+
+- [ ] [Check this box when you complete reading this
+  section]{value='#setting-value-implicitly-by-url'}
+
+## What if no `value` attribute can be assigned?
+
+If the checkbox has no `value` attribute, no sibling `span` or link
+element with a `value` attribute, and no sibling link element with an
+`href` attribute, then the checkbox will not be assigned a `value`
+attribute, and so will not be persistent. (If you have ideas for further
+fallback strategies, I'm open to suggestions.)
+
+## Automatic checklists for exercises
+
+My most common use case for this script is to generate a checklist of
+exercises in a document, so students can keep track of their progress.
+
+To do this, place an empty div with the class 'auto-tally' somewhere in
+your document. The script will populated this div with a checklist of
+all exercises in the document.
+
+For example:
+
+    ::: auto-tally
+    :::
+
+::: auto-tally
+:::
+
+Note that the generated checklist is wrapped in a div with the class
+'exercise-checklist', so you can apply custom css styling to it. I use
+the following to display the list in four columns, with no bullets:
+
+``` css
+div.exercise-checklist ul {column-count:4 }
+div.exercise-checklist ul li{ list-style:none }
+```
+
+## Exercise checkboxes
+
+By default, the script also adds a checkbox to each exercise, in the top
+right corner. This checkbox is linked to the corresponding checkbox in
+the generated checklist. For example,
+
+``` {.SynChecker .Match}
+1.1 P /\ Q /\ R
+```
+
+Note that if you click on the box in the top right corner, the
+corresponding box is checked on the generated checklist above. In this
+way, a student can check the box when they have completed a problem, and
+then review their progress at a glance by looking at the generated
+checklist.
+
+If you want to disable this feature, edit the top to the script, setting
+`addcheckboxestoexercises` to false:
+
+    const addcheckboxestoexercises = false;
+
+## Progress reports
+
+The script can also insert a progress report into each automatically
+generated exercise checklist. This report will show how many points out
+of the total the student has completed (assuming each checked box
+corresponds to a correct submission for credit), along with a
+percentage. But this progress meter is not very smart: it assumes each
+exercise is worth a fixed number of points, and doesn't notice duplicate
+exercises. So by default, this is disabled. If you want to enable it,
+edit the top of the script, setting `displayprogress` to true and `pts`
+to whatever value you want:
+
+    const displayprogress = true;
+    const pts = 10;
+
+## Sample exercises
+
+Here are a few sample exercises, for the sake of demonstration.
+
+``` {.Translate .Prop}
+1.2 P/\Q : People want to know what's going on and questions are unavoidable
+```
+
+``` {.TruthTable .Simple}
+1.3 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
+```
+
+``` {.ProofChecker .Prop}
+1.4 P :|-: Q->P
+```
+
+``` {.QualitativeProblem .MultipleSelection}
+1.5 How are you feeling today?
+| Good!
+| +OK!
+| Meh.
+```
+
+Note that multiple selection qualitative exercises do not have a `value`
+attribute set. So they are ignored by this script. For a script that
+makes student work persistent on all exercises, including multiple
+selection exercises, see `save-work.js`.
