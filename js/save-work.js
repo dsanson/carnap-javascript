@@ -4,14 +4,16 @@
 // A script to save incomplete student work on Carnap.io
 
 function initSaveWork() {
-  const debug = true;
-  const namespace = 'saved-work';
+  const debug = false;
+  const namespace = 'save-work';
   let items;
 
   if (debug) console.log('save-work.js debugging on')
 
   function saveWork() {
+
     if (debug) console.log('saving work');
+
     // Syntax Checking (not implemented)
 
     // Translation and Numerical
@@ -79,9 +81,11 @@ function initSaveWork() {
   }
 
   function loadWork() {
+
     if (debug) console.log('loading saved work');
+
     // Syntax Checking (not implemented)
-    //
+    
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);
@@ -141,24 +145,28 @@ function initSaveWork() {
     // Model Checking
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
+    
+    if (debug) console.log('done loading');
 
-    // For debugging
-    if (debug) console.log(JSON.stringify(items));
   }
 
   function successCallback(as) {
-    if (debug) console.log('success: ' + as)
+
+    if (debug) console.log('fetched assignment state: ' + JSON.stringify(as));
 
     // read assignment state
     if (typeof as[namespace] === 'undefined') {
+      if (debug) console.log('no saved work; creating empty list')
       items = {};
     } else {
       items = as[namespace];
+      if (debug) console.log('fetched items: ' + JSON.stringify(items));
     }
 
+    loadWork();
     $(window).on('beforeunload', saveWork);
     $(window).on('blur', saveWork);
-    document.addEventListener('carnap-loaded', loadWork);
+    //document.addEventListener('carnap-loaded', loadWork);
   }
 
   function failureCallback(error) {
@@ -173,5 +181,7 @@ function initSaveWork() {
 
 }
 
-$(document).ready(initSaveWork);
+document.addEventListener("carnap-loaded", initSaveWork)
+
+//$(document).ready(initSaveWork);
 // $(window).on('load', initSaveWork);

@@ -38,22 +38,18 @@ haven't been using timed assignments.
 
 ## save-work.js
 
-Status: works unreliably, which makes it useless
+Status: works
 
 This script implements persistent student work, saving the work a student has
 done on exercises to the Carnap server using the `AssignmentState` API. It
-doesn't support Sequent Calculus or Gentzen-Prawitz exercises.
-
-More importantly, it doesn't work reliably. I believe the issue is a timing
-problem, as it sometimes tries to reload student work before Carnap is done
-initializing the exercises. But I'm not sure about that. 
-
+currently doesn't support Syntax/Parsing problems, Sequent Calculus problems,
+or Gentzen-Prawitz deductions.
 
 TODO:
 
-- [ ] make reliable
-- [ ] add support for Sequent Calculus and Gentzen-Prawitz (using Carnap's
-  JSON serialization?)
+- [ ] add support for syntax problems
+- [ ] add support for Sequent Calculus problems 
+- [ ] add support for Gentzen-Prawitz deductions
 
 ## youtube-embed.js
 

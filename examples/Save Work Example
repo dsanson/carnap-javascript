@@ -6,43 +6,44 @@ This is a test page for testing `save-work.js`, a script meant to save student w
 
 ## Syntax Checking
 
+This problem type not yet supported.
+
 ~~~{.SynChecker .Match} 
 1.1 P /\ Q /\ R
-1.2 P -> Q \/ R
 ~~~
 
 ## Translation
 
 ~~~{.Translate .Prop}
-1.3 P/\Q : People want to know what's going on and questions are unavoidable
+1.2 P/\Q : People want to know what's going on and questions are unavoidable
 ~~~
 
 ## Truth Tables
 
 ~~~{.TruthTable .Simple}
-1.4 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
+1.3 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
 ~~~
 
 ## Derivations
 
 ~~~{.ProofChecker .Prop} 
-1.5 P :|-: Q->P
+1.4 P :|-: Q->P
 ~~~
 
 ## Model Checking
 
 ```{.CounterModeler .Simple}
-1.6 AxF(x), ExG(x)
+1.5 AxF(x), ExG(x)
 ```
 
 ## Qualitative Problems
 
 ```{.QualitativeProblem .ShortAnswer}
-1.7 How are you feeling today?
+1.6 How are you feeling today?
 ```
 
 ```{.QualitativeProblem .MultipleChoice}
-1.8 How are you feeling today?
+1.7 How are you feeling today?
 | Good!
 | +OK!
 | Meh.
@@ -62,11 +63,15 @@ This is a test page for testing `save-work.js`, a script meant to save student w
 
 ## Sequent Calculus Problems
 
+This problem type not yet supported.
+
 ```{.Sequent .propLK}
 1.10 P->Q, Q->R :|-: P->R
 ```
 
 ## Gentzen-Prawitz Natural Deduction Problems
+
+This problem type not yet supported.
 
 ```{.TreeDeduction .propNK}
 1.11 P\/Q, ~P :|-: Q 
