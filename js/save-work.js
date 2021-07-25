@@ -29,19 +29,15 @@ function initSaveWork() {
     // use an assigned identifier if it exists
     id = $exercise.attr('data-carnap-identifier');
     
-    // but if not, construct an identifier the best we can
+    // but if not, construct an identifier
     if (!id) {
       t = $exercise.attr('data-carnap-type')
       if (t == 'qualitative') {
         t = $exercise.attr('data-carnap-qualitativetype')
       }
       g = $exercise.attr('data-carnap-goal')
-      l = $exercise.parent().attr('data-carnap-label')
-      if (g) {
-        id = fnv32a(t + g);
-      } else {
-        id = fnv32a(l + g);
-      }
+      // identifier is a hash of type and goal
+      id = fnv32a(t + g);
     } 
    
     // avoid duplicate ids
@@ -124,6 +120,54 @@ function initSaveWork() {
     }
   }
 
+  function loadSimple($exercise, workdiv) {
+    const exerciseId = getId($exercise);
+    if (typeof items[exerciseId] !== 'undefined') {
+      const studentWork = items[exerciseId];
+      // check that the saved data is a string or number
+      if (typeof(studentWork) == "string" || typeof(studentWork) == "number")  {
+        if (debug) console.log('loading ' + exerciseId)
+        $exercise.find(workdiv).val(studentWork);
+      } else {
+        console.log(excerciseId + ' not loaded: wrong type');
+      }
+    }
+  }
+
+  function loadArray($exercise, workdiv) {
+    const exerciseId = getId($exercise);
+    if (typeof items[exerciseId] !== 'undefined') {
+      studentWork = items[exerciseId];
+      // check that saved data is an array, not a string
+      if (typeof(studentWork) == "object") {
+        if (debug) console.log('loading ' + exerciseId)
+        $exercise.find(workdiv).each(function () {
+          const value = studentWork.shift();
+          $(this).val(value);
+        });
+      } else {
+        console.log(exerciseId + ' not loaded: wrong type');
+      }
+    }
+  }
+
+  function loadArraytoCheckboxes($exercise, workdiv) {
+    const exerciseId = getId($exercise);
+    if (typeof items[exerciseId] !== 'undefined') {
+      studentWork = items[exerciseId];
+      // check that saved data is an array, not a string
+      if (typeof(studentWork) == "object") {
+        if (debug) console.log('loading ' + exerciseId)
+        $exercise.find(workdiv).each(function () {
+          const value = studentWork.shift();
+          $(this).prop('checked', value);
+        });
+      } else {
+        console.log(exerciseId + ' not loaded: wrong type');
+      }
+    }
+  }
+
   function loadWork() {
 
     if (debug) console.log('loading saved work');
@@ -132,58 +176,27 @@ function initSaveWork() {
 
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
-      const exerciseId = getId($(this));
-      if (typeof items[exerciseId] !== 'undefined') {
-        if (debug) console.log('loading ' + exerciseId)
-        const studentWork = items[exerciseId];
-        $(this).find('input').val(studentWork);
-      }
+      loadSimple($(this), 'input');
     });
 
     // Qualitative Short Answer and Derivations
     $('[data-carnap-qualitativetype=shortanswer], [data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = getId($(this));
-      if (typeof items[exerciseId] !== 'undefined') {
-        if (debug) console.log('loading ' + exerciseId)
-        const studentWork = items[exerciseId];
-        $(this).find('textarea').val(studentWork);
-      }
+      loadSimple($(this), 'textarea');
     });
 
     // Countermodels
     $('[data-carnap-type=countermodeler]').each(function () {
-      const exerciseId = getId($(this));
-      if (typeof items[exerciseId] !== 'undefined') {
-        if (debug) console.log('loading ' + exerciseId)
-        $(this).find('textarea').each(function () {
-          const value = items[exerciseId].shift();
-          $(this).val(value);
-        });
-      }
+      loadArray($(this), 'textarea');
     });
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
-      const exerciseId = getId($(this));
-      if (typeof items[exerciseId] !== 'undefined') {
-        if (debug) console.log('loading ' + exerciseId)
-        $(this).find('select').each(function () {
-          const value = items[exerciseId].shift();
-          $(this).val(value);
-        });
-      }
+      loadArray($(this), 'select');
     });
     
     // Multiple Choice and Multiple Selection
-      $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
-      const exerciseId = getId($(this));
-      if (typeof items[exerciseId] !== 'undefined') {
-        if (debug) console.log('loading ' + exerciseId)
-        $(this).find('input').each(function () {
-          const value = items[exerciseId].shift();
-          $(this).prop('checked', value);
-        });
-      }
+    $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
+      loadArraytoCheckboxes($(this), 'input');
     });
 
     // Syntax Problems

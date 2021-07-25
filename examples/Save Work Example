@@ -62,49 +62,119 @@ depends on Carnap's AssignmentState API, which only works for
 1.11 P\/Q, ~P :|-: Q 
 ```
 
-## Additional Test Cases
+## Identifiers
 
-Problem with an explicit 'identifier' attribute set:
+Carnap does not, by default, provide any unique way of identifying a given
+exercise. An earlier version of this script relied on exercise labels for
+identification purposes, but this is less than ideal, as the same label can be
+used more than once in a single document, and labels can be edited.
+
+So the script now tries to be smarter about this. First, if you explicitly set
+an identifier on an exercise, the script will use that:
 
 `````
-```{.QualitativeProblem .ShortAnswer identifier='feeling'}
+```{.QualitativeProblem .ShortAnswer identifier='how-do-you-do'}
 1.12 How are you feeling today?
 ```
 `````
 
-```{.QualitativeProblem .ShortAnswer identifier='feeling'}
+```{.QualitativeProblem .ShortAnswer identifier='how-do-you-do'}
 1.12 How are you feeling today?
 ```
 
+Note that if you use the same identifier more than once, the script will still
+treat each exercise as distinct, so they can have distinct saved answers. But
+it will rely on the order in which they occur in the document to keep track of
+which is which. This can cause trouble if you then edit the document and
+change the order in which they occur, as the script will try to load work
+saved for the first into the second, and vice versa.
 
-Problem with submissions disabled:
+`````
+```{.QualitativeProblem .ShortAnswer identifier='how-are-you'}
+1.13 How are you feeling today?
+```
+`````
+
+```{.QualitativeProblem .ShortAnswer identifier='how-are-you'}
+1.13 How are you feeling today?
+```
+
+`````
+```{.QualitativeProblem .MultipleChoice identifier='how-are-you'}
+1.14 How are you feeling today?
+| fine
+| *great
+| meh
+```
+`````
+
+```{.QualitativeProblem .MultipleChoice identifier='how-are-you'}
+1.14 How are you feeling today?
+| fine
+| *great
+| meh
+```
+
+## Automatically Generated Identifiers
+
+If no identifier is explicitly set, the script will generate an identifier by
+taking a hash of a string of hopefully uniquely identifying information. This
+will not include the label, because the label might change. Instead, it
+includes the exercise type and the exercise "goal" (i.e., the actual question
+posed). In most cases, this should be enough to uniquely identify an exercise.
+
+Assuming the hash is unique, this should allow saved-work to be retained, even
+if the document is edited, and exercise labels are changed, or exercises are
+re-ordered.
+
+But sometimes the hashes will not be unique, in which case the script will
+identify exercises with the same hash by the order in which they occur in the
+document. This can cause trouble if you then edit the document and
+change the order in which they occur, as the script will try to load work
+saved for the first into the second, and vice versa.
+
+## Test Cases
+
+Here are some more test cases.
+
+### Problems with submissions disabled
+
+An earlier version of this script broke on problems with `submission=none`.
+But this should now work:
 
 ```{.QualitativeProblem .MultipleSelection submission=none}
-1.13 Do you like this example?
+1.15 Do you like this example?
 | Yes!
 | No!
 | Meh.
 ```
 
-Two problems of different kinds with the same label numbers:
+### Same label numbers
+
+Again, this used to be a problem, but shouldn't be now:
 
 ~~~{.ProofChecker .Prop} 
-1.14 :|-: P->P
+1.16 :|-: P->P
 ~~~
 
 ```{.QualitativeProblem .MultipleChoice}
-1.14 Is it valid?
+1.16 Is it valid?
 | *yes
 | no
 ```
 
-Two problems that are exactly the same:
+### Repeated problems
+
+These two exercises are exactly the same, aside from label. Since the script
+doesn't use the label to identify an exercise, they it will identify these
+exercises by the order in which they occur in the document.
 
 ~~~{.ProofChecker .Prop} 
-1.14 Q :|-: P->Q
+1.17 Q :|-: P->Q
 ~~~
 
 ~~~{.ProofChecker .Prop} 
-1.14 Q :|-: P->Q
+1.18 Q :|-: P->Q
 ~~~
+
 
