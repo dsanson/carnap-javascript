@@ -4,7 +4,7 @@
 // A script to save incomplete student work on Carnap.io
 
 function initSaveWork() {
-  const debug = false;
+  const debug = true;
   const namespace = 'save-work';
   let items;
 
@@ -14,7 +14,17 @@ function initSaveWork() {
 
     if (debug) console.log('saving work');
 
-    // Syntax Checking (not implemented)
+    // Syntax Checking 
+    //   this approach---just saving all the html and reloading it---doesn't
+    //   work!
+    //
+    // $('[data-carnap-type=synchecker]').each(function () {
+    //   const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+    //   const studentWork = $(this).find('.output').html();
+    //   items[exerciseId] = studentWork;
+    //   if (debug) console.log('Content: ' + studentWork);
+    //   if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
+    // });
 
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
@@ -84,8 +94,16 @@ function initSaveWork() {
 
     if (debug) console.log('loading saved work');
 
-    // Syntax Checking (not implemented)
-    
+    // // Syntax Checking 
+    // $('[data-carnap-type=synchecker]').each(function () {
+    //   const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+    //   if (typeof items[exerciseId] !== 'undefined') {
+    //     if (debug) console.log('loading ' + exerciseId)
+    //     const studentWork = items[exerciseId];
+    //     $(this).find('.output').html(studentWork);
+    //   }
+    // });
+
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
       const exerciseId = $(this).attr('data-carnap-submission').slice(7);

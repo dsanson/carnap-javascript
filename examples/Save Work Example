@@ -65,7 +65,7 @@ This problem type not yet supported.
 
 This problem type not yet supported.
 
-```{.Sequent .propLK}
+```{.Sequent .propLK options="displayJSON"}
 1.10 P->Q, Q->R :|-: P->R
 ```
 
@@ -73,7 +73,7 @@ This problem type not yet supported.
 
 This problem type not yet supported.
 
-```{.TreeDeduction .propNK}
+```{.TreeDeduction .propNK options="displayJSON"}
 1.11 P\/Q, ~P :|-: Q 
 ```
 
