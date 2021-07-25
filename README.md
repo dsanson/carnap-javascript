@@ -17,11 +17,30 @@ stuff related to checkboxes, including the option to auto-generate a checklist
 for all exercises on a page, so students can track their own progress through
 an assignment.
 
-I have been using this script successfully in my classes since Fall 2020, and
-gradually making improvements and adding features. I believe it is fairly reliable.
+I have been using a version of this script successfully in my classes since
+Fall 2020, and gradually making improvements and adding features. I believe it
+is fairly reliable, but I have not stress-tested the most recent version yet.
 
 For more details, see [this live
 demo](https://carnap.io/shared/dsanson@gmail.com/Checklist%20Example).
+
+## save-work.js
+
+Status: works
+
+This script implements persistent student work, saving the work a student has
+done on exercises to the Carnap server using the `AssignmentState` API. It
+currently doesn't support Syntax/Parsing problems, Sequent Calculus problems,
+or Gentzen-Prawitz deductions.
+
+For more details, see [this live
+demo](https://carnap.io/shared/dsanson@gmail.com/Save%20Work%20Example).
+
+TODO:
+
+- [ ] add support for syntax problems
+- [ ] add support for Sequent Calculus problems 
+- [ ] add support for Gentzen-Prawitz deductions
 
 ## timer.js
 
@@ -35,21 +54,6 @@ up.
 
 I think this script works. But I haven't ended up using it myself, as I
 haven't been using timed assignments.
-
-## save-work.js
-
-Status: works
-
-This script implements persistent student work, saving the work a student has
-done on exercises to the Carnap server using the `AssignmentState` API. It
-currently doesn't support Syntax/Parsing problems, Sequent Calculus problems,
-or Gentzen-Prawitz deductions.
-
-TODO:
-
-- [ ] add support for syntax problems
-- [ ] add support for Sequent Calculus problems 
-- [ ] add support for Gentzen-Prawitz deductions
 
 ## youtube-embed.js
 
