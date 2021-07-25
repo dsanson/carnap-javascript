@@ -2,78 +2,109 @@
 js: https://carnap.io/shared/dsanson@gmail.com/save-work.js
 ---
 
-This is a test page for testing `save-work.js`, a script meant to save student work in progress, and reload it on page reloads. Note that this depends on Carnap's AssignmentState API, which only works for *assigned* pages.
+This is a test page for testing `save-work.js`, a script meant to save
+student work in progress, and reload it on page reloads. Note that this 
+depends on Carnap's AssignmentState API, which only works for
+*assigned* pages.
 
-## Syntax Checking
-
-This problem type not yet supported.
-
-~~~{.SynChecker .Match} 
-1.1 P /\ Q /\ R
-~~~
-
-## Translation
+## Sample Exercises
 
 ~~~{.Translate .Prop}
-1.2 P/\Q : People want to know what's going on and questions are unavoidable
+1.1 P/\Q : People want to know what's going on and questions are unavoidable
 ~~~
-
-## Truth Tables
 
 ~~~{.TruthTable .Simple}
-1.3 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
+1.2 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
 ~~~
-
-## Derivations
 
 ~~~{.ProofChecker .Prop} 
-1.4 P :|-: Q->P
+1.3 P :|-: Q->P
 ~~~
 
-## Model Checking
-
 ```{.CounterModeler .Simple}
-1.5 AxF(x), ExG(x)
+1.4 AxF(x), ExG(x)
 ```
 
-## Qualitative Problems
-
 ```{.QualitativeProblem .ShortAnswer}
-1.6 How are you feeling today?
+1.5 How are you feeling today?
 ```
 
 ```{.QualitativeProblem .MultipleChoice}
-1.7 How are you feeling today?
+1.6 How are you feeling today?
 | Good!
 | +OK!
 | Meh.
 ```
 
 ```{.QualitativeProblem .MultipleSelection}
-1.8 How are you feeling today?
+1.7 How are you feeling today?
 | Good!
 | OK!
 | Meh.
 ```
 
 ```{.QualitativeProblem .Numerical}
-1.9 8 : How many bits in a byte?
+1.8 8 : How many bits in a byte?
 | 2^3
 ```
 
-## Sequent Calculus Problems
+## Syntax Checking, Sequent Calculus, and Gentzen-Prawitz are not supported
 
-This problem type not yet supported.
+~~~{.SynChecker .Match} 
+1.9 P /\ Q /\ R
+~~~
 
 ```{.Sequent .propLK options="displayJSON"}
 1.10 P->Q, Q->R :|-: P->R
 ```
 
-## Gentzen-Prawitz Natural Deduction Problems
-
-This problem type not yet supported.
-
 ```{.TreeDeduction .propNK options="displayJSON"}
 1.11 P\/Q, ~P :|-: Q 
 ```
+
+## Additional Test Cases
+
+Problem with an explicit 'identifier' attribute set:
+
+`````
+```{.QualitativeProblem .ShortAnswer identifier='feeling'}
+1.12 How are you feeling today?
+```
+`````
+
+```{.QualitativeProblem .ShortAnswer identifier='feeling'}
+1.12 How are you feeling today?
+```
+
+
+Problem with submissions disabled:
+
+```{.QualitativeProblem .MultipleSelection submission=none}
+1.13 Do you like this example?
+| Yes!
+| No!
+| Meh.
+```
+
+Two problems of different kinds with the same label numbers:
+
+~~~{.ProofChecker .Prop} 
+1.14 :|-: P->P
+~~~
+
+```{.QualitativeProblem .MultipleChoice}
+1.14 Is it valid?
+| *yes
+| no
+```
+
+Two problems that are exactly the same:
+
+~~~{.ProofChecker .Prop} 
+1.14 Q :|-: P->Q
+~~~
+
+~~~{.ProofChecker .Prop} 
+1.14 Q :|-: P->Q
+~~~
 

@@ -7,29 +7,65 @@ function initSaveWork() {
   const debug = true;
   const namespace = 'save-work';
   let items;
+  let ids = []; // a list for tracking duplicate ids
 
   if (debug) console.log('save-work.js debugging on')
+
+  // use a hash function to generate hopefully unique exercise IDs
+  // https://gist.github.com/vaiorabbit/5657561
+  function fnv32a( str ) {
+    var FNV1_32A_INIT = 0x811c9dc5;
+    var hval = FNV1_32A_INIT;
+    for ( var i = 0; i < str.length; ++i )
+    {
+        hval ^= str.charCodeAt(i);
+        hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+    }
+    return hval >>> 0;
+  }
+
+  function getId($exercise) {
+
+    // use an assigned identifier if it exists
+    id = $exercise.attr('data-carnap-identifier');
+    
+    // but if not, construct an identifier the best we can
+    if (!id) {
+      t = $exercise.attr('data-carnap-type')
+      if (t == 'qualitative') {
+        t = $exercise.attr('data-carnap-qualitativetype')
+      }
+      g = $exercise.attr('data-carnap-goal')
+      l = $exercise.parent().attr('data-carnap-label')
+      if (g) {
+        id = fnv32a(t + g);
+      } else {
+        id = fnv32a(l + g);
+      }
+    } 
+   
+    // avoid duplicate ids
+    n = 0
+    while ( ids.includes(id) ) {
+      n = n + 1;
+      if (debug) console.log('incrementing id');
+      id = id + '-' + n.toString();
+    }
+    ids.push(id);
+
+    if (debug) console.log($exercise.parent().attr('data-carnap-label') + ' id: ' + id);
+    return id;
+  }
 
   function saveWork() {
 
     if (debug) console.log('saving work');
 
-    // Syntax Checking 
-    //   this approach---just saving all the html and reloading it---doesn't
-    //   work!
-    //
-    // $('[data-carnap-type=synchecker]').each(function () {
-    //   const exerciseId = $(this).attr('data-carnap-submission').slice(7);
-    //   const studentWork = $(this).find('.output').html();
-    //   items[exerciseId] = studentWork;
-    //   if (debug) console.log('Content: ' + studentWork);
-    //   if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
-    // });
+    ids = [];  // reset found list of found ids
 
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
-      // ".slice(7)" to remove the 'saveAs:' prefix
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      const exerciseId = getId($(this));
       const studentWork = $(this).find('input').val();
       items[exerciseId] = studentWork;
       if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
@@ -37,7 +73,7 @@ function initSaveWork() {
 
     // Qualitative Short Answer and Derivations
     $('[data-carnap-qualitativetype=shortanswer], [data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      const exerciseId = getId($(this));
       const studentWork = $(this).find('textarea').val();
       items[exerciseId] = studentWork;
       if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
@@ -45,7 +81,7 @@ function initSaveWork() {
 
     // Countermodels
     $('[data-carnap-type=countermodeler]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      const exerciseId = getId($(this));
       items[exerciseId] = [];
       if (debug) console.log('Saving ' + exerciseId);
       $(this).find('textarea').each(function () {
@@ -55,7 +91,7 @@ function initSaveWork() {
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      const exerciseId = getId($(this));
       items[exerciseId] = [];
       if (debug) console.log('Saving ' + exerciseId);
       $(this).find('select').each(function () {
@@ -65,7 +101,7 @@ function initSaveWork() {
 
     // Multiple Choice and Multiple Selection
     $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      const exerciseId = getId($(this));
       items[exerciseId] = [];
       if (debug) console.log('Saving ' + exerciseId);
       $(this).find('input').each(function () {
@@ -73,9 +109,7 @@ function initSaveWork() {
       });
     });
 
-    // Multiple Choice
-    // Model Checking
-    // Multiple Choice and Numerical
+    // Syntax Problems
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
 
@@ -94,19 +128,11 @@ function initSaveWork() {
 
     if (debug) console.log('loading saved work');
 
-    // // Syntax Checking 
-    // $('[data-carnap-type=synchecker]').each(function () {
-    //   const exerciseId = $(this).attr('data-carnap-submission').slice(7);
-    //   if (typeof items[exerciseId] !== 'undefined') {
-    //     if (debug) console.log('loading ' + exerciseId)
-    //     const studentWork = items[exerciseId];
-    //     $(this).find('.output').html(studentWork);
-    //   }
-    // });
+    ids = [];  // reset found list of found ids
 
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);
+      const exerciseId = getId($(this));
       if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
         const studentWork = items[exerciseId];
@@ -116,7 +142,7 @@ function initSaveWork() {
 
     // Qualitative Short Answer and Derivations
     $('[data-carnap-qualitativetype=shortanswer], [data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
+      const exerciseId = getId($(this));
       if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
         const studentWork = items[exerciseId];
@@ -126,7 +152,7 @@ function initSaveWork() {
 
     // Countermodels
     $('[data-carnap-type=countermodeler]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
+      const exerciseId = getId($(this));
       if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
         $(this).find('textarea').each(function () {
@@ -138,7 +164,7 @@ function initSaveWork() {
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
+      const exerciseId = getId($(this));
       if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
         $(this).find('select').each(function () {
@@ -150,7 +176,7 @@ function initSaveWork() {
     
     // Multiple Choice and Multiple Selection
       $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
-      const exerciseId = $(this).attr('data-carnap-submission').slice(7);;
+      const exerciseId = getId($(this));
       if (typeof items[exerciseId] !== 'undefined') {
         if (debug) console.log('loading ' + exerciseId)
         $(this).find('input').each(function () {
@@ -160,7 +186,7 @@ function initSaveWork() {
       }
     });
 
-    // Model Checking
+    // Syntax Problems
     // Sequent Calculus Problems
     // Gentzen-Prawitz Natural Deduction Problems
     
@@ -201,5 +227,3 @@ function initSaveWork() {
 
 document.addEventListener("carnap-loaded", initSaveWork)
 
-//$(document).ready(initSaveWork);
-// $(window).on('load', initSaveWork);
