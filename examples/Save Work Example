@@ -2,179 +2,187 @@
 js: https://carnap.io/shared/dsanson@gmail.com/save-work.js
 ---
 
-This is a test page for testing `save-work.js`, a script meant to save
-student work in progress, and reload it on page reloads. Note that this 
-depends on Carnap's AssignmentState API, which only works for
-*assigned* pages.
+## save-work.js
 
-## Sample Exercises
+This is a sample file, demonstrating the use of `save-work.js`, a bit of
+javascript that saves student work on Carnap. You can find the script on github:
+
+<https://github.com/dsanson/carnap-javascript>.
+
+I have also uploaded the script as a public document on Carnap. So the
+easiest way to use it is to include this in the YAML header of one of
+your Carnap assignments:
+
+    ---
+    js: https://carnap.io/shared/dsanson@gmail.com/save-work.js
+    ---
+
+Note that the script depends on the Carnap server's [AssignmentState
+API](https://carnap.io/srv/doc/javascript.md), which only works for
+*assignments*. So if you are viewing this page as a shared document that
+has not actually been assigned, your work will not be saved.
+For a functioning demo, you will need to upload this document to
+your own account, and assign it to a course.
+
+## The Basic Idea
+
+By default, Carnap does not save student work. So when a web page is closed,
+all the work on that page is lost. But that's not how things should be!
+Students should be able to close an assignment and reopen it without losing
+all their work.
+
+There are two approaches we could use to solve this problem. First, we can
+save student work locally, in their browser cache. This has the benefit that
+work will be saved even if their network connection fails. It has the downside
+that their work will be tied to a single device. If they start working on a
+derivation on their laptop, for example, and then open the assignment on their
+phone, their work in progress will not be there on the phone.
+
+Second, we can save student work on the Carnap server. This has the benefit
+that work will be available from any device. It has the downside that saving
+won't occur in the absence of an internet connection.
+
+Perhaps the best option would be to combine these two approaches, saving both
+locally and to the server. But that introduces some serious complications, as
+we would need to decide what to do when the two sets of saved data are not in
+synch.
+
+This script takes the second approach, saving work to to the Carnap
+server.
+
+## When to save and when to load?
+
+As currently implemented, the script saves work in response to three events:
+
+-   When the page visibility becomes 'hidden', in accordance with the [Page
+    Visibility API](https://www.w3.org/TR/page-visibility-2/).
+-   When the page is closed, via the `beforeunload` event.
+-   Whenever an input element becomes unfocused, via `blur` events.
+
+As currently implemented, work is only loaded from the saved data when the
+page is first loaded. This means that if a student has the same assignment
+open in two tabs, work in the two tabs will not be synchronized.
+
+## Exercise identifiers
+
+Carnap does not provide a unique identifier for exercises. The closest thing
+it provides is the exercise label, but more than one exercise can be assigned
+the same label. The script identifies exercises by label and type. Exercises
+with the same label of the same type are identified by the
+order in which they occur.
+
+None of this really matters unless you find yourself tempted to edit a
+document after it has been assigned. If you do, here is what you need to know:
+
+-   So long as an exercise retains the same unique-for-its-type label across edits, any saved
+    work should be preserved.
+-   If you change the label of an exercise, all saved work for that exercise
+    will be lost.
+-   If you change the label on exercise A to a label that was previously used
+    by exercise B, where A and B are exercises of the same type, work saved
+    on B will be instead be loaded into A. 
+-   If there are several exercises with the same label and of the same type,
+    any edit that changes their number or order will confuse the script: work
+    saved for what was the nth such exercise will be loaded into what is now
+    the nth such exercise.
+
+## Examples
+
+These are examples of a range of different exercises, meant for testing the
+script. Again, they will only work if you are viewing the script as an
+assignment for a course.
 
 ~~~{.Translate .Prop}
-1.1 P/\Q : People want to know what's going on and questions are unavoidable
+1 P/\Q : People want to know what's going on and questions are unavoidable
 ~~~
 
 ~~~{.TruthTable .Simple}
-1.2 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
+2 ((P/\Q)\/R)<->((P\/R)/\(Q\/R))
 ~~~
 
 ~~~{.ProofChecker .Prop} 
-1.3 P :|-: Q->P
+3 P :|-: Q->P
 ~~~
 
 ```{.CounterModeler .Simple}
-1.4 AxF(x), ExG(x)
+4 AxF(x), ExG(x)
 ```
 
 ```{.QualitativeProblem .ShortAnswer}
-1.5 How are you feeling today?
+5 How are you feeling today?
 ```
 
 ```{.QualitativeProblem .MultipleChoice}
-1.6 How are you feeling today?
+6 How are you feeling today?
 | Good!
-| +OK!
+| OK!
 | Meh.
 ```
 
 ```{.QualitativeProblem .MultipleSelection}
-1.7 How are you feeling today?
+7 How are you feeling today?
 | Good!
 | OK!
 | Meh.
 ```
 
 ```{.QualitativeProblem .Numerical}
-1.8 8 : How many bits in a byte?
-| 2^3
+8 8 : How many bits in a byte?
 ```
 
-## Syntax Checking, Sequent Calculus, and Gentzen-Prawitz are not supported
+### Unsupported exercise types
+
+Note that syntax checking problems, sequent calculus problems and
+Gentzen-Prawitz deductions are not currently supported.
 
 ~~~{.SynChecker .Match} 
-1.9 P /\ Q /\ R
+9 P /\ Q /\ R
 ~~~
 
 ```{.Sequent .propLK options="displayJSON"}
-1.10 P->Q, Q->R :|-: P->R
+10 P->Q, Q->R :|-: P->R
 ```
 
 ```{.TreeDeduction .propNK options="displayJSON"}
-1.11 P\/Q, ~P :|-: Q 
+11 P\/Q, ~P :|-: Q 
 ```
 
-## Identifiers
+### Exercises with the same label
 
-Carnap does not, by default, provide any unique way of identifying a given
-exercise. An earlier version of this script relied on exercise labels for
-identification purposes, but this is less than ideal, as the same label can be
-used more than once in a single document, and labels can be edited.
 
-So the script now tries to be smarter about this. First, if you explicitly set
-an identifier on an exercise, the script will use that:
+Saved work for exercises with the same label but different type should be
+persistent across edits that swap their order:
 
-`````
-```{.QualitativeProblem .ShortAnswer identifier='how-do-you-do'}
-1.12 How are you feeling today?
-```
-`````
-
-```{.QualitativeProblem .ShortAnswer identifier='how-do-you-do'}
-1.12 How are you feeling today?
+```{.QualitativeProblem .ShortAnswer}
+12 How are you feeling today?
 ```
 
-Note that if you use the same identifier more than once, the script will still
-treat each exercise as distinct, so they can have distinct saved answers. But
-it will rely on the order in which they occur in the document to keep track of
-which is which. This can cause trouble if you then edit the document and
-change the order in which they occur, as the script will try to load work
-saved for the first into the second, and vice versa.
-
-`````
-```{.QualitativeProblem .ShortAnswer identifier='how-are-you'}
-1.13 How are you feeling today?
-```
-`````
-
-```{.QualitativeProblem .ShortAnswer identifier='how-are-you'}
-1.13 How are you feeling today?
-```
-
-`````
-```{.QualitativeProblem .MultipleChoice identifier='how-are-you'}
-1.14 How are you feeling today?
-| fine
-| *great
-| meh
-```
-`````
-
-```{.QualitativeProblem .MultipleChoice identifier='how-are-you'}
-1.14 How are you feeling today?
-| fine
-| *great
-| meh
-```
-
-## Automatically Generated Identifiers
-
-If no identifier is explicitly set, the script will generate an identifier by
-taking a hash of a string of hopefully uniquely identifying information. This
-will not include the label, because the label might change. Instead, it
-includes the exercise type and the exercise "goal" (i.e., the actual question
-posed). In most cases, this should be enough to uniquely identify an exercise.
-
-Assuming the hash is unique, this should allow saved-work to be retained, even
-if the document is edited, and exercise labels are changed, or exercises are
-re-ordered.
-
-But sometimes the hashes will not be unique, in which case the script will
-identify exercises with the same hash by the order in which they occur in the
-document. This can cause trouble if you then edit the document and
-change the order in which they occur, as the script will try to load work
-saved for the first into the second, and vice versa.
-
-## Test Cases
-
-Here are some more test cases.
-
-### Problems with submissions disabled
-
-An earlier version of this script broke on problems with `submission=none`.
-But this should now work:
-
-```{.QualitativeProblem .MultipleSelection submission=none}
-1.15 Do you like this example?
-| Yes!
-| No!
+```{.QualitativeProblem .MultipleChoice}
+12 How are you feeling today?
+| Good!
+| OK!
 | Meh.
 ```
 
-### Same label numbers
-
-Again, this used to be a problem, but shouldn't be now:
-
-~~~{.ProofChecker .Prop} 
-1.16 :|-: P->P
-~~~
+Saved work for exercises with the same label and same type will not be
+persistent across edits that swap order:
 
 ```{.QualitativeProblem .MultipleChoice}
-1.16 Is it valid?
-| *yes
-| no
+13 Is the argument valid?
+| Yes
+| No
 ```
 
-### Repeated problems
+```{.QualitativeProblem .MultipleChoice}
+13 Is the argument valid?
+| Yes
+| No
+```
 
-These two exercises are exactly the same, aside from label. Since the script
-doesn't use the label to identify an exercise, they it will identify these
-exercises by the order in which they occur in the document.
-
-~~~{.ProofChecker .Prop} 
-1.17 Q :|-: P->Q
-~~~
-
-~~~{.ProofChecker .Prop} 
-1.18 Q :|-: P->Q
-~~~
+```{.QualitativeProblem .MultipleChoice}
+13 Is the argument valid?
+| Yes
+| No
+```
 
 

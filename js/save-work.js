@@ -1,56 +1,70 @@
 /* eslint-env jquery */
 /* global AssignmentState, putAssignmentState, document, window */
 // save_work.js
-// A script to save incomplete student work on Carnap.io
+// A script to save student work on Carnap.io
 
 function initSaveWork() {
   const debug = true;
-  const namespace = 'save-work';
+  const namespace = 'saved-work';
   let items;
   let ids = []; // a list for tracking duplicate ids
 
   if (debug) console.log('save-work.js debugging on')
 
-  // use a hash function to generate hopefully unique exercise IDs
-  // https://gist.github.com/vaiorabbit/5657561
-  function fnv32a( str ) {
-    var FNV1_32A_INIT = 0x811c9dc5;
-    var hval = FNV1_32A_INIT;
-    for ( var i = 0; i < str.length; ++i )
-    {
-        hval ^= str.charCodeAt(i);
-        hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
-    }
-    return hval >>> 0;
-  }
-
   function getId($exercise) {
 
-    // use an assigned identifier if it exists
-    id = $exercise.attr('data-carnap-identifier');
+    l = $exercise.parent().attr('data-carnap-label')
+    t = $exercise.attr('data-carnap-type')
+    // qualitative problems come in many types
+    if (t == 'qualitative') {
+      t = $exercise.attr('data-carnap-qualitativetype')
+    }
+
+    // shorten type to use as label
+    if (t == 'proofchecker') t = '-pr'
+    if (t == 'truthtable') t = '-tt'
+    if (t == 'countermodeler') t = '-cm'
+    if (t == 'multiplechoice') t = '-mc'
+    if (t == 'multipleselection') t = '-ms'
+    if (t == 'shortanswer') t = '-sa'
+    if (t == 'numerical') t = '-nu'
+    if (t == 'translate') t = '-tr'
     
-    // but if not, construct an identifier
-    if (!id) {
-      t = $exercise.attr('data-carnap-type')
-      if (t == 'qualitative') {
-        t = $exercise.attr('data-carnap-qualitativetype')
-      }
-      g = $exercise.attr('data-carnap-goal')
-      // identifier is a hash of type and goal
-      id = fnv32a(t + g);
-    } 
-   
-    // avoid duplicate ids
+    id = l + t 
+    
     n = 0
     while ( ids.includes(id) ) {
       n = n + 1;
-      if (debug) console.log('incrementing id');
       id = id + '-' + n.toString();
     }
     ids.push(id);
 
-    if (debug) console.log($exercise.parent().attr('data-carnap-label') + ' id: ' + id);
     return id;
+  }
+
+  function saveSimple($exercise, workdiv) {
+      const exerciseId = getId($exercise);
+      const studentWork = $exercise.find(workdiv).val();
+      items[exerciseId] = studentWork;
+      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
+  }
+
+  function saveArray($exercise, workdiv) {
+      const exerciseId = getId($exercise);
+      items[exerciseId] = [];
+      $exercise.find(workdiv).each(function () {
+        items[exerciseId].push($(this).val());
+      });
+      if (debug) console.log('Saving ' + exerciseId + ': ' + JSON.stringify(items[exerciseId]));
+  }
+
+  function saveArraytoCheckboxes($exercise, workdiv) {
+      const exerciseId = getId($exercise);
+      items[exerciseId] = [];
+      $exercise.find(workdiv).each(function () {
+        items[exerciseId].push($(this).prop('checked'));
+      });
+      if (debug) console.log('Saving ' + exerciseId + ': ' + JSON.stringify(items[exerciseId]));
   }
 
   function saveWork() {
@@ -61,48 +75,27 @@ function initSaveWork() {
 
     // Translation and Numerical
     $('[data-carnap-type=translate], [data-carnap-qualitativetype=numerical]').each(function () {
-      const exerciseId = getId($(this));
-      const studentWork = $(this).find('input').val();
-      items[exerciseId] = studentWork;
-      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
+      saveSimple($(this),'input');
     });
 
     // Qualitative Short Answer and Derivations
     $('[data-carnap-qualitativetype=shortanswer], [data-carnap-type=proofchecker]').each(function () {
-      const exerciseId = getId($(this));
-      const studentWork = $(this).find('textarea').val();
-      items[exerciseId] = studentWork;
-      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
+      saveSimple($(this),'textarea');
     });
 
     // Countermodels
     $('[data-carnap-type=countermodeler]').each(function () {
-      const exerciseId = getId($(this));
-      items[exerciseId] = [];
-      if (debug) console.log('Saving ' + exerciseId);
-      $(this).find('textarea').each(function () {
-        items[exerciseId].push($(this).val());
-      });
+      saveArray($(this),'textarea');
     });
 
     // Truth Tables
     $('[data-carnap-type=truthtable]').each(function () {
-      const exerciseId = getId($(this));
-      items[exerciseId] = [];
-      if (debug) console.log('Saving ' + exerciseId);
-      $(this).find('select').each(function () {
-        items[exerciseId].push($(this).val());
-      });
+      saveArray($(this),'select');
     });
 
     // Multiple Choice and Multiple Selection
     $('[data-carnap-qualitativetype=multiplechoice], [data-carnap-qualitativetype=multipleselection]').each(function () {
-      const exerciseId = getId($(this));
-      items[exerciseId] = [];
-      if (debug) console.log('Saving ' + exerciseId);
-      $(this).find('input').each(function () {
-        items[exerciseId].push($(this).prop('checked'));
-      });
+      saveArraytoCheckboxes($(this),'input');
     });
 
     // Syntax Problems
@@ -126,10 +119,10 @@ function initSaveWork() {
       const studentWork = items[exerciseId];
       // check that the saved data is a string or number
       if (typeof(studentWork) == "string" || typeof(studentWork) == "number")  {
-        if (debug) console.log('loading ' + exerciseId)
+        if (debug) console.log('loading ' + exerciseId + ': ' + studentWork)
         $exercise.find(workdiv).val(studentWork);
       } else {
-        console.log(excerciseId + ' not loaded: wrong type');
+        console.log(exerciseId + ' not loaded: wrong type');
       }
     }
   }
@@ -221,9 +214,20 @@ function initSaveWork() {
     }
 
     loadWork();
+
+    // use Page Visibility API instead of beforeunload for mobile friendly saving
+    // https://www.igvita.com/2015/11/20/dont-lose-user-and-app-state-use-page-visibility/
+    
+    // subscribe to visibility change events
+    document.addEventListener('visibilitychange', function() {
+      // fires when user switches tabs, apps, goes to homescreen, etc.
+      if (document.visibilityState == 'hidden') saveWork();
+    });
+
     $(window).on('beforeunload', saveWork);
-    $(window).on('blur', saveWork);
-    //document.addEventListener('carnap-loaded', loadWork);
+    $('input').on('blur', saveWork);
+    $('textarea').on('blur', saveWork);
+    $('select').on('blur', saveWork);
   }
 
   function failureCallback(error) {

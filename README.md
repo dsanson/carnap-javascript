@@ -30,7 +30,7 @@ Status: works
 
 This script implements persistent student work, saving the work a student has
 done on exercises to the Carnap server using the `AssignmentState` API. It
-currently doesn't support Syntax/Parsing problems, Sequent Calculus problems,
+doesn't currently support Syntax/Parsing problems, Sequent Calculus problems,
 or Gentzen-Prawitz deductions.
 
 For more details, see [this live
@@ -38,6 +38,7 @@ demo](https://carnap.io/shared/dsanson@gmail.com/Save%20Work%20Example).
 
 TODO:
 
+- [ ] synchronize work between multiple open tabs
 - [ ] add support for syntax problems
 - [ ] add support for Sequent Calculus problems 
 - [ ] add support for Gentzen-Prawitz deductions
