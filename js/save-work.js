@@ -8,6 +8,7 @@ function initSaveWork() {
   const namespace = 'saved-work';
   let items;
   let ids = []; // a list for tracking duplicate ids
+  let firstload = true;
 
   if (debug) console.log('save-work.js debugging on')
 
@@ -46,7 +47,7 @@ function initSaveWork() {
       const exerciseId = getId($exercise);
       const studentWork = $exercise.find(workdiv).val();
       items[exerciseId] = studentWork;
-      if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
+      //if (debug) console.log('Saving ' + exerciseId + ': ' + studentWork);
   }
 
   function saveArray($exercise, workdiv) {
@@ -55,7 +56,7 @@ function initSaveWork() {
       $exercise.find(workdiv).each(function () {
         items[exerciseId].push($(this).val());
       });
-      if (debug) console.log('Saving ' + exerciseId + ': ' + JSON.stringify(items[exerciseId]));
+      //if (debug) console.log('Saving ' + exerciseId + ': ' + JSON.stringify(items[exerciseId]));
   }
 
   function saveArraytoCheckboxes($exercise, workdiv) {
@@ -64,7 +65,7 @@ function initSaveWork() {
       $exercise.find(workdiv).each(function () {
         items[exerciseId].push($(this).prop('checked'));
       });
-      if (debug) console.log('Saving ' + exerciseId + ': ' + JSON.stringify(items[exerciseId]));
+      //if (debug) console.log('Saving ' + exerciseId + ': ' + JSON.stringify(items[exerciseId]));
   }
 
   function saveWork() {
@@ -119,7 +120,7 @@ function initSaveWork() {
       const studentWork = items[exerciseId];
       // check that the saved data is a string or number
       if (typeof(studentWork) == "string" || typeof(studentWork) == "number")  {
-        if (debug) console.log('loading ' + exerciseId + ': ' + studentWork)
+        //if (debug) console.log('loading ' + exerciseId + ': ' + studentWork)
         $exercise.find(workdiv).val(studentWork);
       } else {
         console.log(exerciseId + ' not loaded: wrong type');
@@ -133,7 +134,7 @@ function initSaveWork() {
       studentWork = items[exerciseId];
       // check that saved data is an array, not a string
       if (typeof(studentWork) == "object") {
-        if (debug) console.log('loading ' + exerciseId)
+        // if (debug) console.log('loading ' + exerciseId)
         $exercise.find(workdiv).each(function () {
           const value = studentWork.shift();
           $(this).val(value);
@@ -150,7 +151,7 @@ function initSaveWork() {
       studentWork = items[exerciseId];
       // check that saved data is an array, not a string
       if (typeof(studentWork) == "object") {
-        if (debug) console.log('loading ' + exerciseId)
+        // if (debug) console.log('loading ' + exerciseId)
         $exercise.find(workdiv).each(function () {
           const value = studentWork.shift();
           $(this).prop('checked', value);
@@ -202,7 +203,7 @@ function initSaveWork() {
 
   function successCallback(as) {
 
-    if (debug) console.log('fetched assignment state: ' + JSON.stringify(as));
+    // if (debug) console.log('fetched assignment state: ' + JSON.stringify(as));
 
     // read assignment state
     if (typeof as[namespace] === 'undefined') {
@@ -210,7 +211,7 @@ function initSaveWork() {
       items = {};
     } else {
       items = as[namespace];
-      if (debug) console.log('fetched items: ' + JSON.stringify(items));
+      // if (debug) console.log('fetched items: ' + JSON.stringify(items));
     }
 
     loadWork();
@@ -221,25 +222,32 @@ function initSaveWork() {
     // subscribe to visibility change events
     document.addEventListener('visibilitychange', function() {
       // fires when user switches tabs, apps, goes to homescreen, etc.
-      if (document.visibilityState == 'hidden') saveWork();
+      // if (document.visibilityState == 'hidden') saveWork();
+      //if (document.visibilityState == 'visible') fetchWork();
     });
 
     $(window).on('beforeunload', saveWork);
     $('input').on('blur', saveWork);
     $('textarea').on('blur', saveWork);
     $('select').on('blur', saveWork);
+    // $(window).on('focus', fetchWork);
+    // $(window).on('focus', function() {console.log('focused!')});
   }
 
   function failureCallback(error) {
     if (debug) console.log('failure: ' + error)
   }
 
-  try {
-    CarnapServerAPI.getAssignmentState().then(successCallback, failureCallback);
-  } catch {
-    if (debug) console.log('Unable to access CarnapServerAPI');
+  function fetchWork() {
+    try {
+      if (debug) console.log('fetching assignment state');
+      CarnapServerAPI.getAssignmentState().then(successCallback, failureCallback);
+    } catch {
+      if (debug) console.log('Unable to access CarnapServerAPI');
+    }
   }
-
+  
+  fetchWork();
 }
 
 document.addEventListener("carnap-loaded", initSaveWork)
